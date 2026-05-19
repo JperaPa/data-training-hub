@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://unpkg.com/three"></script>
+<script src="https://unpkg.com/globe.gl"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AML Intelligence Workstation</title>
+  <style>
+    /* ── Reset & base ── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at 50% 50%, #111324 0%, #090a10 70%, #030406 100%);
+      background-attachment: fixed;
+      color: #e2e8f0;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(79, 142, 247, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.04) 0%, transparent 35%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Top navigation bar ── */
+    .navbar {
+      background: rgba(26, 29, 39, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(45, 49, 72, 0.7);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+
+    .navbar-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .navbar-badge {
+      font-size: 12px;
+      background: rgba(26, 58, 42, 0.8);
+      color: #4ade80;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: monospace;
+      border: 1px solid rgba(74, 222, 128, 0.2);
+    }
+
+    /* ── Main content area ── */
+    .main {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ── Dashboard Cards Grid ── */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: rgba(26, 29, 39, 0.75);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(45, 49, 72, 0.6);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #8b92a9;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .metric-trend {
+      font-size: 12px;
+      margin-top: 6px;
+      color: #4ade80;
+    }
+
+    .metric-trend.down {
+      color: #f87171;
+    }
+
+    /* ── Tab navigation ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(45, 49, 72, 0.6);
+      padding-bottom: 0;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      color: #8b92a9;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      border-bottom-color: #4f8ef7;
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: #c5cde3;
+    }
+
+    /* ── Content panels ── */
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    /* ── A simple card ── */
+    .card {
+      background: rgba(26, 29, 39, 0.75);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(45, 49, 72, 0.6);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      color: #8b92a9;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Overview panel layout ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ── Typology rows ── */
+    .typo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(45, 49, 72, 0.4);
+    }
+
+    .typo-row:last-child {
+      border-bottom: none;
+    }
+
+    .typo-name {
+      font-size: 13px;
+      color: #e2e8f0;
+      flex: 1;
+    }
+
+    .typo-bar-wrap {
+      width: 100px;
+      height: 6px;
+      background: #2d3148;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .typo-bar {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .typo-pct {
+      font-size: 12px;
+      color: #8b92a9;
+      min-width: 30px;
+      text-align: right;
+    }
+
+    /* ── Risk pills ── */
+    .risk-pill {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .risk-pill.high {
+      background: #3d1515;
+      color: #f87171;
+    }
+
+    .risk-pill.med {
+      background: #3d2c0a;
+      color: #fbbf24;
+    }
+
+    /* ── Region rows ── */
+    .region-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(45, 49, 72, 0.4);
+      font-size: 14px;
+    }
+
+    .region-row:last-child {
+      border-bottom: none;
+    }
+
+    .region-name {
+      color: #e2e8f0;
+    }
+
+    .region-trend.up {
+      color: #f87171;
+    }
+
+    .region-trend.down {
+      color: #4ade80;
+    }
+
+    /* ── Career Component Grid Architecture ── */
+    .career-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    
+    .career-full-width {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 1100px) {
+      .career-grid { grid-template-columns: 1fr; }
+      .career-full-width { grid-column: span 1; }
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      background: #1f2330;
+      border: 1px solid #2d3148;
+      border-radius: 6px;
+      color: #4f8ef7;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: #4f8ef7;
+      color: white;
+      border-color: #4f8ef7;
+    }
+
+    .bio-box {
+      background: #0f1117;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: #c5cde3;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* ── SOP Interactive Playbook Navigation Layout ── */
+    .sop-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .sop-layout { grid-template-columns: 1fr; }
+    }
+
+    .sop-menu-tree {
+      background: rgba(26, 29, 39, 0.8);
+      border: 1px solid rgba(45, 49, 72, 0.8);
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 650px;
+      overflow-y: auto;
+    }
+
+    .sop-tree-node {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b92a9;
+      cursor: pointer;
+      text-align: left;
+      border: none;
+      background: transparent;
+      transition: all 0.2s;
+      display: block;
+      width: 100%;
+    }
+
+    .sop-tree-node:hover {
+      background: rgba(79, 142, 247, 0.1);
+      color: #e2e8f0;
+    }
+
+    .sop-tree-node.active-node {
+      background: #4f8ef7;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .sop-content-pane {
+      background: rgba(26, 29, 39, 0.6);
+      border: 1px solid rgba(45, 49, 72, 0.6);
+      border-radius: 12px;
+      padding: 24px;
+      min-height: 450px;
+    }
+
+    .sop-header-block {
+      border-bottom: 1px solid rgba(45, 49, 72, 0.8);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .sop-section-title {
+      font-size: 18px;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .sop-section-meta {
+      font-size: 11px;
+      color: #8b92a9;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sop-body-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .sop-body-text h3 {
+      font-size: 15px;
+      color: #ffffff;
+      margin-bottom: 8px;
+      margin-top: 12px;
+    }
+
+    .sop-body-text h4 {
+      font-size: 13px;
+      color: #fbbf24;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+
+    .sop-body-text p {
+      margin-bottom: 10px;
+    }
+
+    .sop-body-text ul {
+      margin-top: 6px;
+      margin-bottom: 12px;
+      padding-left: 20px;
+    }
+
+    .sop-body-text li {
+      margin-bottom: 6px;
+    }
+
+    .sop-body-text table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+
+    .sop-body-text table.data-table th {
+      background: rgba(45, 49, 72, 0.6);
+      color: #ffffff;
+      text-align: left;
+      padding: 8px;
+      border: 1px solid rgba(45, 49, 72, 0.8);
+    }
+
+    .sop-body-text table.data-table td {
+      padding: 8px;
+      border: 1px solid rgba(45, 49, 72, 0.4);
+      color: #c5cde3;
+    }
+
+    .sop-bullet-list {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    .sop-bullet-list li {
+      margin-bottom: 8px;
+    }
+
+    .sop-callout-box, .sop-body-text blockquote.note-box {
+      background: rgba(15, 17, 23, 0.6);
+      border-left: 3px solid #4f8ef7;
+      border-radius: 0 6px 6px 0;
+      padding: 12px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      color: #c5cde3;
+    }
+
+    .sop-body-text .formula-box {
+      background: #0f1117;
+      border: 1px dashed #4f8ef7;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #00ffe0;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <span class="navbar-title">Data Training Lab — Intel Workstation</span>
+    <span class="navbar-badge" id="performance-badge">● CPU: 2% | RAM: Stable | NET: 0 Kbps</span>
+  </nav>
+
+  <main class="main">
+
+    <div class="grid-container">
+      <div class="metric-card">
+        <div class="metric-label">Remember to</div>
+        <div class="metric-value">0402</div>
+        <div class="metric-trend">↑ +12% MoM</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SARs Filed (YTD)</div>
+        <div class="metric-value">4,290</div>
+        <div class="metric-trend down">↓ −3% vs target</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Proceeds Flagged</div>
+        <div class="metric-value">$2.1B</div>
+        <div class="metric-trend">↑ +8% QoQ</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Social Harm Index</div>
+        <div class="metric-value">67.4</div>
+        <div class="metric-trend down">↑ Worsening</div>
+      </div>
+      <div class="card" style="position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 500px; grid-column: span 2;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; z-index: 10;">
+        <div>
+            <h3 style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #8b92a9;">Geopolitical Intelligence Globe</h3>
+            <span style="font-size: 24px; font-weight: 700; color: #ffffff; display: block; margin-top: 5px;">318 <span style="font-size: 12px; font-weight: 400; color: #ef4444;">Active Targets</span></span>
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <button onclick="switchGlobeLayer('flows')" id="btn-layer-flows" style="background: #22c55e20; color: #22c55e; border: 1px solid #22c55e40; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: 600;">Vectors</button>
+            <button onclick="switchGlobeLayer('hotspots')" id="btn-layer-hotspots" style="background: #1e2030; color: #8b92a9; border: 1px solid #2f334d; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">Hotspots</button>
+        </div>
+    </div>
+
+    <div id="globe-container" style="width: 100%; height: 380px; position: relative; margin-top: 10px; margin-bottom: 10px; display: block;"></div>
+
+    <div id="globe-intel-banner" style="background: #0f111a; border-top: 1px solid #1e2030; margin: 0 -20px -20px -20px; padding: 10px 15px; font-size: 11px; color: #8b92a9; z-index: 10; display: flex; justify-content: space-between; align-items: center;">
+        <span><strong style="color: #38bdf8;">OSINT Feed:</strong> Monitoring Cartel Financial Corridors...</span>
+        <span style="color: #64748b; font-family: monospace;">Source: FinCEN/UNODC</span>
+    </div>
+</div>
+      
+      <div class="metric-card" style="grid-column: span 1; min-width: 340px;">
+        <div class="card-title" style="margin-bottom: 8px;">Trending Activity Feed</div>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;" id="trending-topics">
+          <button onclick="fetchTrending('&quot;professional money laundering&quot; OR &quot;shell company&quot; OR &quot;funnel account&quot; site:fincen.gov OR site:justice.gov')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #4f8ef7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">PMLO / Typologies</button>
+          <button onclick="fetchTrending('&quot;Chinese money laundering&quot; OR &quot;underground banking&quot; OR &quot;mirror transfer&quot; OR &quot;precursor&quot;')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #4f8ef7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">CMLN Networks</button>
+          <button onclick="fetchTrending('&quot;forced labor&quot; OR &quot;trafficking network&quot; OR &quot;debt bondage&quot;')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #4f8ef7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">Human Trafficking</button>
+          <button onclick="fetchTrending('&quot;enforcement action&quot; OR &quot;civil monetary penalty&quot; OR &quot;BSA violation&quot; OR &quot;consent order&quot; site:fincen.gov OR site:justice.gov OR site:federalreserve.gov')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #a855f7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">Enforcement Actions</button>
+          <button onclick="fetchTrending('&quot;structuring&quot; OR &quot;layering&quot; OR &quot;crypto layering&quot; OR &quot;unusual wire&quot;')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #4f8ef7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">Red Flags Matrix</button>
+        </div>
+
+        <div style="display: flex; gap: 6px; margin-bottom: 8px; width: 100%;">
+          <input 
+            type="text" 
+            id="intel-search-input"
+            class="trending-search-input" 
+            value='"professional money laundering" OR "shell company" OR "funnel account" site:fincen.gov OR site:justice.gov'
+            style="width: 75%; background: #0f1117; border: 1px solid #2d3148; color: #e2e8f0; font-size: 11px; padding: 6px; border-radius: 6px;"
+          >
+          <button 
+            onclick="searchIntel()" 
+            style="width: 25%; padding:6px 0; background:#4f8ef7; border:none; border-radius:6px; color:white; cursor:pointer; font-size:12px; font-weight:600; text-align: center;"
+          >
+            Extract
+          </button>
+        </div>
+
+        <div 
+          id="intel-results" 
+          style="height: 240px; overflow-y:auto; border:1px solid rgba(45, 49, 72, 0.6); border-radius:8px; padding:6px; background: rgba(15, 17, 23, 0.6);"
+        ></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+      <button class="tab-btn" onclick="switchTab('typologies')">Typologies</button>
+      <button class="tab-btn" onclick="switchTab('geopolitical')">Geopolitical</button>
+      <button class="tab-btn" onclick="switchTab('impact')">Social Impact</button>
+      <button class="tab-btn" onclick="switchTab('enforcement')">Enforcement Actions</button>
+      <button class="tab-btn" onclick="switchTab('sar')">SAR Assist</button>
+      <button class="tab-btn" onclick="switchTab('career')">Career Matrix</button>
+      <button class="tab-btn" onclick="switchTab('playbook')">SOP Playbook</button>
+      <button class="tab-btn" onclick="switchTab('predictions')">Predictions</button>
+    </div>
+
+    <div id="panel-overview" class="panel active">
+      <div class="two-col">
+        
+        <div class="card">
+          <div class="card-title">Top typologies this quarter</div>
+          <div class="typo-row">
+            <span class="typo-name">Crypto layering</span>
+            <div class="typo-bar-wrap"><div class="typo-bar" style="width: 31%; background: #f87171;"></div></div>
+            <span class="typo-pct">31%</span>
+            <span class="risk-pill high">HIGH</span>
+          </div>
+          <div class="typo-row">
+            <span class="typo-name">Real estate ML</span>
+            <div class="typo-bar-wrap"><div class="typo-bar" style="width: 24%; background: #f87171;"></div></div>
+            <span class="typo-pct">24%</span>
+            <span class="risk-pill high">HIGH</span>
+          </div>
+          <div class="typo-row">
+            <span class="typo-name">Trade-based ML</span>
+            <div class="typo-bar-wrap"><div class="typo-bar" style="width: 18%; background: #fbbf24;"></div></div>
+            <span class="typo-pct">18%</span>
+            <span class="risk-pill med">MED</span>
+          </div>
+          <div class="typo-row">
+            <span class="typo-name">Shell companies</span>
+            <div class="typo-bar-wrap"><div class="typo-bar" style="width: 15%; background: #f87171;"></div></div>
+            <span class="typo-pct">15%</span>
+            <span class="risk-pill high">HIGH</span>
+          </div>
+          <div class="typo-row">
+            <span class="typo-name">Funnel accounts</span>
+            <div class="typo-bar-wrap"><div class="typo-bar" style="width: 12%; background: #fbbf24;"></div></div>
+            <span class="typo-pct">12%</span>
+            <span class="risk-pill med">MED</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Regional activity tracking</div>
+          <div class="region-row"><span class="region-name">Eastern Europe</span><span class="region-trend up">↑ +28% QoQ</span></div>
+          <div class="region-row"><span class="region-name">Southeast Asia</span><span class="region-trend up">↑ +19% QoQ</span></div>
+          <div class="region-row"><span class="region-name">Latin America</span><span class="region-trend up">↑ +11% QoQ</span></div>
+          <div class="region-row"><span class="region-name">Middle East / GCC</span><span class="region-trend up">↑ +7% QoQ</span></div>
+          <div class="region-row"><span class="region-name">Western Europe</span><span class="region-trend down">↓ −4% QoQ</span></div>
+          <div class="region-row"><span class="region-name">North America</span><span class="region-trend up">↑ +3% QoQ</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Geopolitical Risk Matrix</div>
+          <div class="region-row">
+            <span class="region-name">OFAC Sanctions Alerts</span>
+            <span class="risk-pill high">3 CRITICAL</span>
+          </div>
+          <div class="region-row">
+            <span class="region-name">High-Risk Jurisdiction Changes</span>
+            <span style="font-size: 12px; color: #fbbf24;">↑ 2 Added</span>
+          </div>
+          <div class="region-row">
+            <span class="region-name">Cross-Border Transfer Spikes</span>
+            <span class="region-trend up">↑ Europe Corridors</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Social Impact Network Signals</div>
+          <div class="typo-row">
+            <span class="typo-name">Forced Labor Networks</span>
+            <span style="font-size: 12px; color: #e2e8f0;">Active Monitor</span>
+          </div>
+          <div class="typo-row">
+            <span class="typo-name">Illicit Massage Businesses (IMB)</span>
+            <span class="risk-pill med">ALERT NODES</span>
+          </div>
+          <div class="typo-row">
+            <span class="typo-name">Debt Bondage Repayment Runs</span>
+            <span style="font-size: 12px; color: #f87171;">Flagged Activity</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Enforcement Actions Quick Summary</div>
+          <div class="region-row">
+            <span class="region-name">FinCEN Civil Penalties Logged</span>
+            <span style="font-size: 12px; font-weight: 600; color: #ffffff;">14 Active</span>
+          </div>
+          <div class="region-row">
+            <span class="region-name">DOJ Corporate BSA Resolutions</span>
+            <span style="font-size: 12px; color: #a855f7;">Extracting data...</span>
+          </div>
+          <div class="region-row">
+            <span class="region-name">Programmatic Breakdowns Tagged</span>
+            <span class="risk-pill high">SYSTEMIC FAILURE</span>
+          </div>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-title">Active Career Station Summary</div>
+            <div style="font-size: 12px; color: #c5cde3; margin-bottom: 12px; line-height: 1.5;">
+              Hiring workflows actively targeted for Tier 1 Global Banking Networks and Tier 2 High-Volume Fintech/MSB Operations.
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span style="font-size: 11px; color: #8b92a9; font-family: monospace;">Pipeline Strategy: Active</span>
+            <button class="action-btn" onclick="switchTab('career')" style="padding: 4px 10px;">Launch Career Hub ↗</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="panel-typologies" class="panel">
+      <div class="card">
+        <div class="card-title">Module 2 — Extraction Monitor</div>
+        <div id="typology-extraction-log" style="font-size: 13px; color: #8b92a9; line-height: 1.6;">
+          Select a processing query in the trending activity card to automatically extract structural indicators here.
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-geopolitical" class="panel">
+      <div class="card">
+        <div class="card-title">Module 4 — Cross-Border Corridor Analysis</div>
+        <p style="font-size: 13px; color: #c5cde3;">Geographic cluster points, sanctions announcements (OFAC), and regional jurisdiction variables.</p>
+      </div>
+    </div>
+
+    <div id="panel-impact" class="panel">
+      <div class="card">
+        <div class="card-title">Social Impact Engine</div>
+        <p style="font-size: 13px; color: #c5cde3;">Tracks forced labor indicators, illicit massage operations, and debt bondage repayment corridors.</p>
+      </div>
+    </div>
+
+    <div id="panel-enforcement" class="panel">
+      <div class="card">
+        <div class="card-title">AML / BSA Enforcement Tracking Monitor</div>
+        <div id="enforcement-extraction-log" style="font-size: 13px; color: #8b92a9; line-height: 1.6;">
+          Select the Enforcement Actions tracking pill above to extract penalty patterns, fine counts, and regulatory metrics here.
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-sar" class="panel">
+      <div class="card">
+        <div class="card-title">Module 3 — Red Flag Generator</div>
+        <div id="redflag-extraction-log" style="font-size: 13px; color: #8b92a9; line-height: 1.6;">
+          Awaiting input tracking vectors to cross-reference formatting.
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-playbook" class="panel">
+      <div class="sop-layout">
+        
+        <div class="sop-menu-tree" id="playbook-sidebar-menu">
+          <div style="font-size:11px; color:#8b92a9; padding:10px;">Awaiting Playbook Ingestion Engine...</div>
+        </div>
+
+        <div class="sop-content-pane" id="playbook-content-pane">
+          <div style="font-size:13px; color:#8b92a9; text-align:center; margin-top:40px;">Select a playbook index element to render procedural tracking rules.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="panel-career" class="panel">
+      <div class="career-grid">
+        
+        <div class="card">
+          <div class="card-title">Automated High-Volume Job Board Routers</div>
+          <p style="font-size: 12px; color: #8b92a9; margin-bottom: 12px;">Trigger a multi-platform background route mapped out for Tier 1-3 high-volume organizations.</p>
+          
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 11px; font-weight: 600; color: #ffffff; margin-bottom: 6px;">Tier 1 — Global Banking Ecosystems (Daily Check)</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="action-btn" onclick="executeJobSearch('JPMorgan Chase', 'AML Investigator')">JPMorgan</button>
+              <button class="action-btn" onclick="executeJobSearch('Bank of America', 'AML Analyst')">BofA</button>
+              <button class="action-btn" onclick="executeJobSearch('Wells Fargo', 'BSA Investigator')">Wells Fargo</button>
+              <button class="action-btn" onclick="executeJobSearch('Citibank', 'AML Case Investigator')">Citibank</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 11px; font-weight: 600; color: #ffffff; margin-bottom: 6px;">Tier 2 — High-Volume Fintech & MSB Nodes</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="action-btn" onclick="executeJobSearch('PayPal', 'Financial Crimes Investigator')">PayPal</button>
+              <button class="action-btn" onclick="executeJobSearch('Coinbase', 'Transaction Monitoring Analyst')">Coinbase</button>
+              <button class="action-btn" onclick="executeJobSearch('Cash App Block', 'AML Analyst')">Cash App</button>
+              <button class="action-btn" onclick="executeJobSearch('Capital One', 'Fraud Investigator')">Capital One</button>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; font-weight: 600; color: #ffffff; margin-bottom: 6px;">Tier 3 — Managed Services & Contractors (Surge Pools)</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="action-btn" onclick="executeJobSearch('Accenture', 'AML Analyst')">Accenture</button>
+              <button class="action-btn" onclick="executeJobSearch('Genpact', 'SAR Writer')">Genpact</button>
+              <button class="action-btn" onclick="executeJobSearch('Guidehouse', 'AML Specialist')">Guidehouse</button>
+              <button class="action-btn" onclick="executeJobSearch('Aston Carter', 'AML')">Aston Carter</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-title">Outreach & Resume Optimization Array</div>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 11px; font-weight:600; color:#e2e8f0; margin-bottom: 4px;">Recruiter Outreach Text Asset</div>
+              <textarea id="outreach-script" style="width:100%; height:75px; background: #0f1117; border: 1px solid #2d3148; color: #c5cde3; font-size: 11px; padding: 6px; border-radius: 6px; resize: none;" readonly>Hi [Name], I’m an AML Investigator with experience in alert review, customer research, and SAR drafting across retail, correspondent banking, and brokerage environments. I’m targeting high-volume AML/SAR teams and would love to be considered for any current or upcoming roles. Happy to share my resume.</textarea>
+              <button class="action-btn" style="margin-top: 4px;" onclick="copyAsset('outreach-script')">Copy Outreach Text</button>
+            </div>
+
+            <div>
+              <div style="font-size: 11px; font-weight:600; color:#e2e8f0; margin-bottom: 4px;">ATS Optimization Metrics (Click to copy)</div>
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <button class="action-btn" style="text-align:left; font-weight: normal; font-size:11px;" onclick="copyDirectText('Reviewed high-volume AML alerts and conducted 30-day activity analyses to determine legitimacy.')">📋 &quot;Reviewed high-volume AML alerts and conducted 30-day analyses...&quot;</button>
+                <button class="action-btn" style="text-align:left; font-weight: normal; font-size:11px;" onclick="copyDirectText('Drafted regulator-ready SAR narratives aligned with FinCEN expectations.')">📋 &quot;Drafted regulator-ready SAR narratives aligned with FinCEN expectations.&quot;</button>
+                <button class="action-btn" style="text-align:left; font-weight: normal; font-size:11px;" onclick="copyDirectText('Exceeded production and quality benchmarks while maintaining 99%+ documentation accuracy.')">📋 &quot;Exceeded production and quality benchmarks while maintaining 99%+ accuracy.&quot;</button>
+              </div>
+            </div>
+          </div>
+          <div id="clipboard-toast" style="font-size: 11px; color: #4ade80; margin-top:8px; height: 12px;"></div>
+        </div>
+
+        <div class="card career-full-width">
+          <div class="card-title">Purpose / Bio Statement Master Matrix</div>
+          <p style="font-size: 12px; color: #8b92a9; margin-bottom: 12px;">Reference desk containing curated data-driven profiles and strategic compliance mission blocks for copying.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+            <div>
+              <div style="font-size: 11px; font-weight: 600; color: #4f8ef7; margin-bottom: 4px;">1. LinkedIn Profile (Impactful Data Integration)</div>
+              <div class="bio-box" id="bio-linkedin">Money and power remain central drivers of policy and enforcement. As long as certain substances are criminalized while others are medicalized, black markets will thrive—and vulnerable communities will continue to bear the cost. The global illicit drug trade alone generates an estimated $426–$652 billion annually, while human trafficking and forced labor add another $236 billion to this shadow economy. Governments spend over $100 billion each year attempting to combat these networks—yet criminal enterprises often outpace enforcement budgets, especially in regions with weak institutions or high corruption. I’ve seen how the drug war, framed as a societal solution, has instead fueled cycles of incarceration, violence, and exploitation. No matter how many people are imprisoned or killed, the systemic incentives remain—and new actors emerge to fill the void. My work is rooted in exposing these systemic failures and advocating for those most impacted by documenting and reporting the financial behaviors that enable exploitation. My investigative approach and SAR documentation are guided by the standards outlined in the FFIEC BSA/AML Manual and continuously informed by FinCEN advisories, emerging typologies, and evolving financial‑crime trends. I approach every case with a risk‑focused, evidence‑driven mindset, ensuring that my findings, narratives, and recommendations reflect current regulatory expectations and contribute to meaningful enforcement intelligence. I work to strengthen institutional resilience by ensuring that integrity, accountability, and regulatory alignment guide every aspect of financial‑crime prevention.</div>
+              <button class="action-btn" onclick="copyTextFromDiv('bio-linkedin')">Copy LinkedIn Profile</button>
+            </div>
+
+            <div>
+              <div style="font-size: 11px; font-weight: 600; color: #4f8ef7; margin-bottom: 4px;">2. Regulatory Variant (FFIEC / FinCEN Focus)</div>
+              <div class="bio-box" id="bio-regulatory">My investigative work and SAR documentation are guided by the standards and expectations outlined in the FFIEC BSA/AML Manual and continuously informed by FinCEN advisories, trend analyses, and emerging typologies. I approach every case with a risk‑focused, evidence‑driven mindset, ensuring that my findings, narratives, and recommendations reflect current regulatory guidance, evolving financial‑crime patterns, and industry best practices. My mission is to produce clear, actionable, and compliant SARs that support law enforcement, protect the financial system, and uphold the integrity of my institution’s BSA/AML program.</div>
+              <button class="action-btn" onclick="copyTextFromDiv('bio-regulatory')">Copy Regulatory Variant</button>
+            </div>
+
+            <div>
+              <div style="font-size: 11px; font-weight: 600; color: #4f8ef7; margin-bottom: 4px;">3. Tactical Core Variant (Interdisciplinary/Operational)</div>
+              <div class="bio-box" id="bio-tactical">I bring a unique blend of military discipline and investigative expertise to the fight against financial crime. With experience spanning counterterrorism operations, law enforcement/public safety, and anti‑money laundering investigations, I specialize in analyzing complex transaction patterns and drafting clear, actionable SARs. My focus is on turning regulatory requirements into meaningful intelligence that supports law enforcement and disrupts illicit networks. Fluent in English and Spanish, I leverage strong stakeholder management skills and a deep understanding of BSA/AML/OFAC frameworks to strengthen compliance programs and protect the integrity of the financial system.</div>
+              <button class="action-btn" onclick="copyTextFromDiv('bio-tactical')">Copy Tactical Variant</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="panel-predictions" class="panel">
+      <div class="card">
+        <div class="card-title">Trend Forecasting</div>
+        <p style="font-size: 13px; color: #c5cde3;">NLP clustering projections and emerging threat trendlines.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let simulatedCpu = 3;
+    let simulatedNetwork = 0;
+    let masterPlaybookCachedData = [];
+
+    // Asynchronous runtime fetch engine for the playbook tab
+    async function initializeSOPPlaybook() {
+      try {
+        const response = await fetch('./playbook.json');
+        if (!response.ok) throw new Error(`HTTP validation failed: ${response.status}`);
+        masterPlaybookCachedData = await response.json();
+        renderSOPPlaybookMenu();
+        
+        if(masterPlaybookCachedData.length > 0 && masterPlaybookCachedData[0].subsections.length > 0) {
+          loadPlaybookContent(masterPlaybookCachedData[0].id, masterPlaybookCachedData[0].subsections[0].id);
+          setTimeout(() => {
+            const firstBtn = document.querySelector('.sop-tree-node');
+            if(firstBtn) firstBtn.classList.add('active-node');
+          }, 50);
+        }
+      } catch (error) {
+        console.error("SOP Playbook Data Pipeline Load Aborted:", error);
+        document.getElementById('playbook-content-pane').innerHTML = `
+          <div style="color: #f87171; padding: 20px; border: 1px dashed rgba(248, 113, 113, 0.4); border-radius:8px; background: rgba(61, 21, 21, 0.4);">
+            <h3 style="font-size: 14px; margin-bottom: 6px;">[!] Playbook Synchronization Interrupted</h3>
+            <p style="font-size: 12px; line-height: 1.5; color: #c5cde3;">The workstation was unable to access playbook.json via Fetch.</p>
+          </div>`;
+      }
+    }
+
+    function renderSOPPlaybookMenu() {
+      const sidebarContainer = document.getElementById('playbook-sidebar-menu');
+      if (!sidebarContainer || masterPlaybookCachedData.length === 0) return;
+      
+      let menuHTML = '';
+      masterPlaybookCachedData.forEach(sec => {
+        menuHTML += `<div style="font-size: 10px; color: #8b92a9; font-weight: 700; padding: 10px 12px 4px 12px; text-transform: uppercase; letter-spacing:0.05em;">${sec.section}</div>`;
+        sec.subsections.forEach(sub => {
+          menuHTML += `<button class="sop-tree-node" onclick="loadPlaybookContent('${sec.id}', '${sub.id}', event)">${sub.title}</button>`;
+        });
+      });
+      sidebarContainer.innerHTML = menuHTML;
+    }
+
+    function loadPlaybookContent(sectionId, subId, event) {
+      const displayPane = document.getElementById('playbook-content-pane');
+      const targetSection = masterPlaybookCachedData.find(s => s.id === sectionId);
+      
+      if (targetSection && targetSection.content[subId]) {
+        displayPane.innerHTML = `
+          <div class="sop-header-block">
+            <h2 class="sop-section-title">${targetSection.section}</h2>
+            <div class="sop-section-meta">Technical Reference Node: ${subId.toUpperCase()}</div>
+          </div>
+          <div class="sop-body-text">${targetSection.content[subId]}</div>`;
+        
+        document.querySelectorAll('.sop-tree-node').forEach(btn => btn.classList.remove('active-node'));
+        if (event && event.currentTarget) event.currentTarget.classList.add('active-node');
+      }
+    }
+
+    function executeJobSearch(company, title) {
+      const queryStr = `"${company}" "${title}"`;
+      window.open(`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(queryStr)}`, '_blank');
+      window.open(`https://www.indeed.com/jobs?q=${encodeURIComponent(queryStr)}`, '_blank');
+    }
+
+    function copyAsset(elementId) {
+      const copyText = document.getElementById(elementId);
+      if (copyText) {
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+        showToast("Asset copied to clipboard!");
+      }
+    }
+
+    function copyTextFromDiv(elementId) {
+      const targetDiv = document.getElementById(elementId);
+      if (targetDiv) {
+        navigator.clipboard.writeText(targetDiv.textContent || targetDiv.innerText);
+        showToast("Statement copied to clipboard!");
+      }
+    }
+
+    function copyDirectText(text) {
+      navigator.clipboard.writeText(text);
+      showToast("Metrics clause copied!");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("clipboard-toast");
+      if(toast) {
+        toast.textContent = msg;
+        setTimeout(() => { toast.textContent = ""; }, 2500);
+      }
+    }
+
+    function fetchTrending(topicQuery) {
+      const searchInput = document.getElementById("intel-search-input");
+      if (searchInput) {
+        searchInput.value = topicQuery;
+        searchIntel();
+      }
+    }
+
+    async function searchIntel() {
+      const searchInput = document.getElementById("intel-search-input");
+      if (!searchInput) return;
+
+      const query = searchInput.value;
+      if (!query) return;
+
+      simulatedCpu = Math.floor(Math.random() * 30) + 60;
+      simulatedNetwork = Math.floor(Math.random() * 300) + 400;
+      monitorPerformanceMetrics();
+      
+      const targetUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`;
+      const feedConverterUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(targetUrl)}`;
+
+      try {
+        const response = await fetch(feedConverterUrl);
+        const data = await response.json();
+        const resultsDiv = document.getElementById("intel-results");
+        resultsDiv.innerHTML = ""; 
+
+        if (!data.items || data.items.length === 0) {
+          resultsDiv.innerHTML = `<div style="font-size:12px;color:#8b92a9;padding:4px;">No live intelligence data located.</div>`;
+          resetNetworkSpike();
+          return;
+        }
+
+        processExtractedSubmodules(query, data.items);
+
+        data.items.forEach(item => {
+          const feedItem = document.createElement("div");
+          feedItem.style.paddingBottom = "6px";
+          feedItem.style.marginBottom = "6px";
+          feedItem.style.borderBottom = "1px solid rgba(45, 49, 72, 0.4)";
+          feedItem.style.cursor = "pointer";
+          feedItem.innerHTML = `
+            <div style="font-size:11px; font-weight:600; color:#e2e8f0; line-clamp: 2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.title}</div>
+            <div style="font-size:9px; color:#8b92a9; margin-top: 2px;">${new Date(item.pubDate).toLocaleDateString()} • ${item.author || "OSINT Network"}</div>`;
+          feedItem.onclick = () => { window.open(item.link, '_blank'); };
+          resultsDiv.appendChild(feedItem);
+        });
+        setTimeout(resetNetworkSpike, 800);
+      } catch (err) {
+        console.error("Error executing ingestion pipelines: ", err);
+        resetNetworkSpike();
+      }
+    }
+
+    function processExtractedSubmodules(currentQuery, items) {
+      const typoPanel = document.getElementById("typology-extraction-log");
+      const flagPanel = document.getElementById("redflag-extraction-log");
+      const enforcePanel = document.getElementById("enforcement-extraction-log");
+
+      if (currentQuery.includes("enforcement action") && enforcePanel && items.length > 0) {
+        enforcePanel.innerHTML = `
+          <div style="color: #a855f7; font-weight:600; margin-bottom:8px;">✓ Captured ${items.length} AML/BSA Enforcement Feeds</div>
+          <ul style="padding-left:16px; color:#e2e8f0; list-style-type: square;">
+            <li><strong>Regulatory Trigger:</strong> Failure patterns identified.</li>
+          </ul>`;
+      }
+      if (typoPanel && items.length > 0) {
+        typoPanel.innerHTML = `
+          <div style="color: #4ade80; font-weight:600; margin-bottom:8px;">✓ Ingestion pipeline captured ${items.length} indicators</div>`;
+      }
+      if (flagPanel && items.length > 1) {
+        flagPanel.innerHTML = `
+          <div style="color: #fbbf24; font-weight:600; margin-bottom:8px;">⚠️ High-Risk Activity Matrix Triggered</div>`;
+      }
+    }
+
+    function resetNetworkSpike() {
+      simulatedNetwork = 0;
+      simulatedCpu = Math.floor(Math.random() * 4) + 2;
+      monitorPerformanceMetrics();
+    }
+
+    function monitorPerformanceMetrics() {
+      const badge = document.getElementById("performance-badge");
+      let memoryUtilization = 0;
+      if (window.performance && window.performance.memory) {
+        const memoryInfo = window.performance.memory;
+        if (memoryInfo.jsHeapLimit > 0) {
+          memoryUtilization = Math.round((memoryInfo.usedJSHeapSize / memoryInfo.jsHeapLimit) * 100);
+        }
+      }
+      if (memoryUtilization === 0) {
+        memoryUtilization = 28;
+      }
+      if (badge) {
+        badge.textContent = `● CPU: ${simulatedCpu}% | RAM: ${memoryUtilization}% | NET: ${simulatedNetwork} Kbps`;
+      }
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('onclick') === `switchTab('${tabName}')`) btn.classList.add('active');
+      });
+      const targetPanel = document.getElementById('panel-' + tabName);
+      if (targetPanel) targetPanel.classList.add('active');
+    }
+
+    // Native administrative terminal hook channel for macOS cache purge
+    function localAppPurge() {
+      if (typeof require !== 'undefined') {
+        const { ipcRenderer } = require('electron');
+        showToast("Requesting Admin Privileges for OS Purge...");
+        ipcRenderer.send('trigger-hardware-purge');
+        ipcRenderer.once('purge-status', (event, response) => {
+          if (response.success) {
+            resetNetworkSpike();
+            showToast("System Hardware RAM Purged Clean!");
+          } else {
+            showToast("Purge cancelled or access denied.");
+          }
+        });
+      } else {
+        showToast("Browser sandbox active. Simulating flush...");
+        setTimeout(() => {
+          resetNetworkSpike();
+          showToast("Workstation Cache Flushed Clean!");
+        }, 1200);
+      }
+    }
+
+    // ── GEOPOLITICAL 3D GLOBE CONTROLLER MODULE ──
+    let myGlobe;
+    let globeData = {};
+
+    function initIntelGlobe() {
+      const container = document.getElementById('globe-container');
+      if (!container) return;
+
+      // Create a procedural canvas texture to completely bypass Electron's CDN image blocks
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      
+      // Paint a sleek tactical dark tech grid background
+      ctx.fillStyle = '#0f111a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      // Draw grid lat/long background lines
+      for (let i = 0; i < canvas.width; i += 32) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+      }
+      for (let j = 0; j < canvas.height; j += 32) {
+        ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
+      }
+
+      // Draw high-contrast digital landmass blocks
+      ctx.fillStyle = '#1e2235';
+      // Approximate map blocks (Americas, Eurasia, Africa) to anchor spatial tracking math
+      ctx.fillRect(100, 100, 250, 220); // Western Hemisphere
+      ctx.fillRect(450, 60, 480, 260);  // Eastern Hemisphere
+      ctx.fillRect(480, 240, 160, 180); // Africa Network Base
+
+      const proceduralTexture = canvas.toDataURL();
+
+      // Initialize Globe engine utilizing our secure local asset generation string
+      myGlobe = Globe()(container)
+        .globeImageUrl(proceduralTexture)
+        .showAtmosphere(true)
+        .atmosphereColor("#4f8ef7")
+        .atmosphereAltitude(0.15)
+        .backgroundColor('rgba(0,0,0,0)') 
+        .width(container.clientWidth)
+        .height(container.clientHeight)
+        
+        // Data loop anchors for tracking cross-border corridors
+        .arcsData(globeData.cartelFlows || [])
+        .arcStartLat(d => d.startLat)
+        .arcStartLng(d => d.startLng)
+        .arcEndLat(d => d.endLat)
+        .arcEndLng(d => d.endLng)
+        .arcColor(d => d.color)
+        .arcDashLength(0.4)
+        .arcDashGap(2)
+        .arcDashAnimateTime(1500)
+        .arcStroke(d => d.stroke)
+        .arcLabel(d => `<strong>${d.name}</strong><br>Typology: ${d.type}<br>Signal: ${d.osintSignal}`);
+
+      myGlobe.pointOfView({ lat: 23.0, lng: -90.0, altitude: 2.2 }, 0);
+      
+      window.addEventListener('resize', () => {
+        myGlobe.width(container.clientWidth);
+        myGlobe.height(container.clientHeight);
+      });
+    }
+
+    function switchGlobeLayer(layerType) {
+      const btnFlows = document.getElementById('btn-layer-flows');
+      const btnHotspots = document.getElementById('btn-layer-hotspots');
+      const banner = document.getElementById('globe-intel-banner');
+
+      if (layerType === 'flows') {
+        btnFlows.style.background = "#22c55e20"; btnFlows.style.color = "#22c55e"; btnFlows.style.border = "1px solid #22c55e40";
+        btnHotspots.style.background = "#1e2030"; btnHotspots.style.color = "#8b92a9"; btnHotspots.style.border = "1px solid #2f334d";
+        banner.innerHTML = `<span><strong style="color: #38bdf8;">OSINT Feed:</strong> Monitoring Cartel Financial Corridors...</span><span style="color: #64748b; font-family: monospace;">Source: FinCEN/UNODC</span>`;
+        myGlobe.pointsData([]).arcsData(globeData.cartelFlows || []);
+      } else {
+        btnHotspots.style.background = "#ef444420"; btnHotspots.style.color = "#ef4444"; btnHotspots.style.border = "1px solid #ef444440";
+        btnFlows.style.background = "#1e2030"; btnFlows.style.color = "#8b92a9"; btnFlows.style.border = "1px solid #2f334d";
+        banner.innerHTML = `<span><strong style="color: #ef4444;">Tactical Warning:</strong> High risk cross-border transaction anomalies logged.</span><span style="color: #64748b; font-family: monospace;">Source: X Network / Substack Signals</span>`;
+        
+        myGlobe.arcsData([]).pointsData(globeData.hotspots || [])
+          .pointLat(d => d.lat)
+          .pointLng(d => d.lng)
+          .pointColor(d => d.color)
+          .pointRadius(2)
+          .pointAltitude(d => d.value * 0.015)
+          .pointLabel(d => `<strong>${d.label}</strong><br>Intensity: +${d.value}% QoQ<br>Details: ${d.details}`);
+      }
+    }
+
+    // Unified DOM Setup Loop
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeSOPPlaybook();
+      fetchTrending('"professional money laundering" OR "shell company" OR "funnel account" site:fincen.gov OR site:justice.gov');
+      
+      // Async Data Pipeline link for WebGL mapping vectors
+      fetch('intel-globe-data.json')
+        .then(res => res.json())
+        .then(data => {
+          globeData = data;
+          initIntelGlobe();
+        })
+        .catch(err => console.error("Globe data coordinates failed to load:", err));
+
+      setInterval(() => {
+        if (simulatedNetwork === 0) simulatedCpu = Math.floor(Math.random() * 4) + 2;
+        monitorPerformanceMetrics();
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
