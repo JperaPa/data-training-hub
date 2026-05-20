@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "ADMIN": "United States", "REGION_UN": "Americas" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-125, 24], [-66, 24], [-66, 49], [-125, 49], [-125, 24]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "ADMIN": "Brazil", "REGION_UN": "Americas" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-74, -34], [-34, -34], [-34, 5], [-74, 5], [-74, -34]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "ADMIN": "China", "REGION_UN": "Asia" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [73, 18], [135, 18], [135, 53], [73, 53], [73, 18]
+        ]]
+      }
+    }
+  ]
+}

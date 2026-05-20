@@ -1,0 +1,24 @@
+{
+  "name": "data-training-hub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+  "start": "electron ."
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jperapa/data-training-hub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jperapa/data-training-hub/issues"
+  },
+  "homepage": "https://github.com/jperapa/data-training-hub#readme",
+  "devDependencies": {
+    "electron": "^42.2.0"
+  }
+}
