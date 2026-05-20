@@ -1,0 +1,16 @@
+[
+  {
+    "type": "Cartel Flow",
+    "startLat": 4.5709, "startLng": -74.2973, "startName": "Source Zone (South)",
+    "endLat": 37.0902, "endLng": -95.7129, "endName": "Consuming Zone (North)",
+    "flowValue": "$1.2B",
+    "color": "#f87171"
+  },
+  {
+    "type": "Regional Hotspot",
+    "lat": 48.3794, "lng": 31.1656, "country": "Eastern Europe Corridor",
+    "intensity": 0.85,
+    "growth": "+28% QoQ",
+    "color": "#ef4444"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "cartelFlows": [
+    {
+      "name": "Sinaloa/CJNG Cash Structuring Corridor",
+      "startLat": 19.4326, "startLng": -99.1332, "source": "Mexico (South)",
+      "endLat": 41.8781, "endLng": -87.6298, "target": "Chicago Hub (North)",
+      "stroke": 2, "color": "#f87171", "type": "Bulk Cash / Structuring",
+      "osintSignal": "FinCEN GTO / X Alert Network"
+    },
+    {
+      "name": "Andean Cocaine Capital Return Loop",
+      "startLat": 40.7128, "startLng": -74.0060, "source": "New York (North)",
+      "endLat": 4.7110, "endLng": -74.0721, "target": "Colombia (South)",
+      "stroke": 1.5, "color": "#4ade80", "type": "Trade-Based ML / Black Market Peso Exchange",
+      "osintSignal": "UNODC 2026 Asset Flight Data"
+    }
+  ],
+  "hotspots": [
+    {
+      "lat": 48.3794, "lng": 31.1656, "label": "Eastern Europe Crypto Layering",
+      "value": 28, "color": "#ef4444", "details": "Sanctions Evasion & Instant Mixers"
+    },
+    {
+      "lat": 15.8700, "lng": 100.9925, "label": "Southeast Asia Cyber-Fraud Hubs",
+      "value": 19, "color": "#f97316", "details": "Pig-Butchering / Underground Banking"
+    }
+  ]
+}

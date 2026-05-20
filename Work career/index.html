@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type="module">
-  import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-  import Globe from 'https://unpkg.com/globe.gl@4.6.10/dist/globe.gl.esm.js';
-
-  window.THREE = THREE;
-  window.Globe = Globe;
-</script>
+  <script src="https://unpkg.com/three"></script>
+<script src="https://unpkg.com/globe.gl"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AML Intelligence Workstation</title>
@@ -489,7 +484,7 @@
 <body>
 
   <nav class="navbar">
-    <span class="navbar-title">Data Training Hub </span>
+    <span class="navbar-title">Data Training Lab — Intel Workstation</span>
     <span class="navbar-badge" id="performance-badge">● CPU: 2% | RAM: Stable | NET: 0 Kbps</span>
   </nav>
 
@@ -528,7 +523,7 @@
         </div>
     </div>
 
-<div id="intel-globe-container" style="width:100%; height:380px;"></div>
+    <div id="globe-container" style="width: 100%; height: 380px; position: relative; margin-top: 10px; margin-bottom: 10px; display: block;"></div>
 
     <div id="globe-intel-banner" style="background: #0f111a; border-top: 1px solid #1e2030; margin: 0 -20px -20px -20px; padding: 10px 15px; font-size: 11px; color: #8b92a9; z-index: 10; display: flex; justify-content: space-between; align-items: center;">
         <span><strong style="color: #38bdf8;">OSINT Feed:</strong> Monitoring Cartel Financial Corridors...</span>
@@ -545,7 +540,6 @@
           <button onclick="fetchTrending('&quot;forced labor&quot; OR &quot;trafficking network&quot; OR &quot;debt bondage&quot;')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #4f8ef7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">Human Trafficking</button>
           <button onclick="fetchTrending('&quot;enforcement action&quot; OR &quot;civil monetary penalty&quot; OR &quot;BSA violation&quot; OR &quot;consent order&quot; site:fincen.gov OR site:justice.gov OR site:federalreserve.gov')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #a855f7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">Enforcement Actions</button>
           <button onclick="fetchTrending('&quot;structuring&quot; OR &quot;layering&quot; OR &quot;crypto layering&quot; OR &quot;unusual wire&quot;')" style="padding: 4px 8px; background: rgba(45, 49, 72, 0.6); border: 1px solid #4f8ef7; border-radius: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">Red Flags Matrix</button>
-          <button onclick="switchGlobeLayer('regions')" id="btn-layer-regions">Regions</button>
         </div>
 
         <div style="display: flex; gap: 6px; margin-bottom: 8px; width: 100%;">
@@ -584,9 +578,6 @@
     </div>
 
     <div id="panel-overview" class="panel active">
-      <div class="panel active" id="geopolitical-panel">
-  <div id="intel-globe-container" style="width:100%; height:600px;"></div>
-</div>
       <div class="two-col">
         
         <div class="card">
@@ -1178,11 +1169,11 @@
       
       // Async Data Pipeline link for WebGL mapping vectors
       fetch('intel-globe-data.json')
-  .then(res => res.json())
-  .then(data => {
-    globeData = data;
-  })
-  .catch(err => console.error("Globe data coordinates failed to load:", err));
+        .then(res => res.json())
+        .then(data => {
+          globeData = data;
+          initIntelGlobe();
+        })
         .catch(err => console.error("Globe data coordinates failed to load:", err));
 
       setInterval(() => {
@@ -1191,6 +1182,5 @@
       }, 3000);
     });
   </script>
-<script type="module" src="../js/globe.js"></script>
 </body>
 </html>
