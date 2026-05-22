@@ -1,0 +1,6 @@
+{
+  "memory": { "critical": 95, "warning": 85 },
+  "cpu": { "critical": 4.0, "warning": 3.0 },
+  "disk": { "full": "100%" },
+  "activitywatch": { "unreachable": "AW unreachable" }
+}
