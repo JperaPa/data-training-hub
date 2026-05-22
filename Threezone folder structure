@@ -1,0 +1,49 @@
+/src
+  /constitution
+    /rules
+      ce_rules.json
+    /learning
+      ce_learning.json
+    diagnostics.js
+    verify-modules.js
+
+  /runtime
+    /acting
+      ce-agent.js
+      sanctions-agent.js
+      typology-agent.js
+      osint-agent.js
+      finance-agent.js
+      training-agent.js
+      new-agent/        ← you already created this (perfect)
+    /critic
+      critic-agent.js   ← we will build this
+    /alf
+      alf-agent.js      ← we will build this
+    orchestrator.js     ← the brain of Zone 2
+
+  /learning
+    rule-learning-agent.js
+    exception-feedback.js
+
+  /ui
+    dashboard.js
+    dth-dashboard.js
+    /components
+      card.js
+      table.js
+
+  /core
+    router.js
+    state.js
+    utils.js
+
+/html
+  index.html
+
+/css
+  styles.css
+
+main.js
+preload.js
+package.json

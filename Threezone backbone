@@ -1,0 +1,136 @@
+
+DTH architecture maps (the Agent Pattern with Constitution → Acting Agent → Critic Agent → ALF → Rule Learning Loop)
+
+
+1. First: What the Agent Pattern Represents
+The diagram you shared describes a three‑zone multi‑agent architecture:
+Zone 1 — Constitution
+• The “source of truth”
+• Rules, policies, constraints
+• Transparency + governance
+Zone 2 — Runtime Inference Pipeline
+• Acting Agent (classify, extract, validate, reason)
+• Critic Agent (evaluate, approve/reject)
+• ALF (human simulator)
+• Final output
+Zone 3 — Learning & Evolution Loop
+• Exception feedback
+• Rule Learning Agent
+• SME review
+• Updating the Constitution
+This is a closed-loop, self-improving agent system.
+
+2. Now: How Your Current DTH Project Maps to This Pattern
+Based on your repo structure (from your commit logs), here’s how your system aligns:
+
+ZONE 1 — Constitution (Rules, Policies, Truth Source)
+Your matching components:
+• src/data/ce_rules.json
+• src/data/ce_learning.json
+• verify-modules.js
+• system-diagnostics.js
+Why these match:
+These files represent:
+• rule sets
+• learning data
+• module verification
+• system integrity checks
+This is exactly what the Constitution layer is supposed to be.
+✔ You already have a Constitution layer
+You just haven’t formalized it as a single “source of truth” module yet.
+
+ZONE 2 — Runtime Inference Pipeline (Acting + Critic + ALF)
+Your matching components:
+Acting Agents
+You have MANY acting agents:
+• ce-agent.js
+• finance-agent.js
+• osint-agent.js
+• sanctions-agent.js
+• typology-agent.js
+• training-agent.js
+These agents:
+• classify
+• extract
+• validate
+• reason
+This is exactly what the Acting Agent in the diagram does.
+Critic Agent
+You have partial critic functionality:
+• readiness.js
+• system-diagnostics.js
+These evaluate:
+• system health
+• module integrity
+• agent readiness
+But you do not yet have a unified “Critic Agent” that evaluates each Acting Agent’s output.
+ALF (Human Simulator)
+You do not yet have an ALF-like module.
+But you DO have:
+• dashboard.js
+• dth-dashboard.js
+These could evolve into:
+• human-in-the-loop review
+• approval/rejection UI
+• escalation logic
+So you have the foundation, but not the full ALF layer.
+
+ZONE 3 — Learning & Evolution Loop (Rule Learning Agent)
+Your matching components:
+• ce_learning.json
+• training-agent.js
+• verify-modules.js
+These suggest:
+• learning
+• updating rules
+• verifying modules
+But you do not yet have:
+• a Rule Learning Agent
+• exception feedback loops
+• SME review logic
+• automated rule updates
+✔ You have the seeds of Zone 3
+But not the full loop.
+
+4. What You Need Next (Based on the Diagram)
+To fully match the architecture in the image, you need to add:
+1. A Central Orchestrator
+• routes tasks
+• calls acting agents
+• calls critic
+• calls ALF
+• handles feedback loops
+2. A Critic Agent
+• evaluates outputs
+• flags errors
+• enforces Constitution rules
+3. An ALF Layer
+• simulates human approval
+• escalate / approve / reject
+• feed exceptions back to learning loop
+4. A Rule Learning Agent
+• analyzes exceptions
+• updates ce_rules.json
+• updates ce_learning.json
+
+6. Your Next Move
+Tell me which direction you want to go:
+A. Build the Central Orchestrator (recommended next step)
+This ties your entire system together.
+B. Build the Critic Agent
+This enforces the Constitution.
+C. Build the ALF (human simulator)
+This gives you human-in-the-loop decisioning.
+D. Build the Rule Learning Agent
+This completes the feedback loop.
+E. Reorganize your repo to match the Agent Pattern
+Clean architecture, clean folders, clean imports.
+
+A. Define the standard AGENT RESPONSE schema
+(so all agents return consistent output)
+B. Integrate the schema into the orchestrator
+(so it validates tasks automatically)
+C. Build the Critic Agent to evaluate task + response
+(Zone 2 quality control)
+D. Build the ALF layer
+(approve / reject / escalate)

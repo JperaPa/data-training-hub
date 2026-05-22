@@ -489,11 +489,23 @@
 <body>
 
   <nav class="navbar">
-    <span class="navbar-title">Data Training Hub </span>
+    <span class="navbar-title">Data Training Hub</span>
     <span class="navbar-badge" id="performance-badge">● CPU: 2% | RAM: Stable | NET: 0 Kbps</span>
   </nav>
 
   <main class="main">
+
+  <!-- your dashboard UI -->
+
+  <button id="runTypology" class="action-button">
+    Run Typology Detection
+  </button>
+
+  <div id="stzOutput" class="result-box"></div>
+
+</main>
+
+</body>
 
     <div class="grid-container">
       <div class="metric-card">
@@ -561,6 +573,11 @@
   <div class="dth-title">Data Training Hub (DTH)</div>
   <button id="dth-run-sweep-btn">Run Intelligence Sweep</button>
   <span id="dth-last-run-status">Last run: —</span>
+</div>
+<div class="action-panel">
+  <button id="runTypology" class="action-button">
+    Run Typology Detection
+  </button>
 </div>
 <div class="dth-panel" id="dth-ce-panel">
   <h2>Command Element (CE)</h2>
@@ -851,6 +868,16 @@
       monitorPerformanceMetrics();
     }, 3000);
   });
-</script>
-</body>
+<script type="module">
+      import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+      import Globe from 'https://unpkg.com/globe.gl@4.6.10/dist/globe.gl.esm.js';
+
+      window.THREE = THREE;
+      window.Globe = Globe;
+    </script>
+
+    <!-- Load STZ‑IS runtime + dashboard logic -->
+    <script type="module" src="./ui/dashboard.js"></script>
+<script type="module" src="./runtime/runtime-init.js"></script>
+  </body>
 </html>

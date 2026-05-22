@@ -1,51 +1,58 @@
-// ------------------------------------------------------------
-// Load CE Constitution (rules)
-// ------------------------------------------------------------
-const CE_RULES = require("../data/ce_rules.json");
-// ------------------------------------------------------------
-// Load CE Constitution (rules)
-// ------------------------------------------------------------
+// js/ce-agent.js
 
 // ------------------------------------------------------------
-// ZONE 1 — CONSTITUTION (Rules + Transparency Layer)
+// LOAD CE RULES (corrected path for new architecture)
+// ------------------------------------------------------------
+const path = require("path");
+const fs = require("fs");
+
+const RULES_PATH = path.join(__dirname, "../src/data/ce_rules.json");
+const CE_RULES = JSON.parse(fs.readFileSync(RULES_PATH, "utf8"));
+
+// ------------------------------------------------------------
+// LOAD CRITIC + ALF (runtime agents)
+// ------------------------------------------------------------
+const critic = require("../src/runtime/critic/critic-agent.js");
+const alf = require("../src/runtime/alf/alf-agent.js");
+
+// ------------------------------------------------------------
+// ZONE 1 — CONSTITUTION (your original logic)
 // ------------------------------------------------------------
 const CE_CONSTITUTION = {
   version: CE_RULES.version || "1.0",
-  rules: {
-    memory: {
-      critical: CE_RULES.memory?.critical ?? 95,
-      warning: CE_RULES.memory?.warning ?? 85,
-      reason: CE_RULES.memory?.reason || "High memory usage can cause system instability."
-    },
-    cpu: {
-      critical: CE_RULES.cpu?.critical ?? 4.0,
-      warning: CE_RULES.cpu?.warning ?? 3.0,
-      reason: CE_RULES.cpu?.reason || "Sustained high CPU load reduces responsiveness."
-    },
-    disk: {
-      fullString: CE_RULES.disk?.fullString || "100%",
-      reason: CE_RULES.disk?.reason || "Full disk prevents logging and system operations."
-    },
-    activitywatch: {
-      unreachable: CE_RULES.activitywatch?.unreachable || "AW unreachable",
-      reason: CE_RULES.activitywatch?.reason || "ActivityWatch is required for behavioral telemetry."
-    }
+  memory: {
+    critical: CE_RULES.memory?.critical ?? 95,
+    warning: CE_RULES.memory?.warning ?? 85,
+    reason: CE_RULES.memory?.reason || "High memory usage can cause system instability."
+  },
+  cpu: {
+    critical: CE_RULES.cpu?.critical ?? 4.0,
+    warning: CE_RULES.cpu?.warning ?? 3.0,
+    reason: CE_RULES.cpu?.reason || "Sustained high CPU load reduces responsiveness."
+  },
+  disk: {
+    fullString: CE_RULES.disk?.fullString || "100%",
+    reason: CE_RULES.disk?.reason || "Full disk prevents logging and system operations."
+  },
+  activitywatch: {
+    unreachable: CE_RULES.activitywatch?.unreachable || "AW unreachable",
+    reason: CE_RULES.activitywatch?.reason || "ActivityWatch is required for behavioral telemetry."
   }
 };
 
 // ------------------------------------------------------------
-// ZONE 2 — RUNTIME INFERENCE PIPELINE
+// CLASSIFY
 // ------------------------------------------------------------
-
-// 1. CLASSIFY
 function classifySystem(system) {
-  if (system.memUsagePercent > CE_CONSTITUTION.rules.memory.critical) return "CRITICAL";
-  if (system.cpuLoad[0] > CE_CONSTITUTION.rules.cpu.critical) return "CRITICAL";
-  if (system.disk.includes(CE_CONSTITUTION.rules.disk.fullString)) return "CRITICAL";
+  if (system.memUsagePercent > CE_CONSTITUTION.memory.critical) return "CRITICAL";
+  if (system.cpuLoad[0] > CE_CONSTITUTION.cpu.critical) return "CRITICAL";
+  if (system.disk.includes(CE_CONSTITUTION.disk.fullString)) return "CRITICAL";
   return "NORMAL";
 }
 
-// 2. EXTRACT
+// ------------------------------------------------------------
+// EXTRACT
+// ------------------------------------------------------------
 function extractMetrics(system) {
   return {
     mem: parseFloat(system.memUsagePercent),
@@ -56,7 +63,9 @@ function extractMetrics(system) {
   };
 }
 
-// 3. VALIDATE
+// ------------------------------------------------------------
+// VALIDATE
+// ------------------------------------------------------------
 function validateMetrics(metrics) {
   const errors = [];
   if (isNaN(metrics.mem)) errors.push("Invalid memory metric");
@@ -64,22 +73,24 @@ function validateMetrics(metrics) {
   return errors;
 }
 
-// 4. REASON (Apply Constitution Rules)
+// ------------------------------------------------------------
+// REASON
+// ------------------------------------------------------------
 function reasonAboutSystem(metrics) {
   const issues = [];
   const criticalIssues = [];
 
   // Memory
-  if (metrics.mem > CE_CONSTITUTION.rules.memory.critical) {
-    criticalIssues.push("Memory usage above 95%");
-  } else if (metrics.mem > CE_CONSTITUTION.rules.memory.warning) {
+  if (metrics.mem > CE_CONSTITUTION.memory.critical) {
+    criticalIssues.push("Memory usage above critical threshold");
+  } else if (metrics.mem > CE_CONSTITUTION.memory.warning) {
     issues.push("High memory pressure");
   }
 
   // CPU
-  if (metrics.cpu > CE_CONSTITUTION.rules.cpu.critical) {
+  if (metrics.cpu > CE_CONSTITUTION.cpu.critical) {
     criticalIssues.push("CPU load critically high");
-  } else if (metrics.cpu > CE_CONSTITUTION.rules.cpu.warning) {
+  } else if (metrics.cpu > CE_CONSTITUTION.cpu.warning) {
     issues.push("Elevated CPU load");
   }
 
@@ -89,7 +100,7 @@ function reasonAboutSystem(metrics) {
   }
 
   // ActivityWatch
-  if (metrics.activitywatch === CE_CONSTITUTION.rules.activitywatch.unreachable) {
+  if (metrics.activitywatch === CE_CONSTITUTION.activitywatch.unreachable) {
     issues.push("ActivityWatch unreachable");
   }
 
@@ -108,7 +119,7 @@ function reasonAboutSystem(metrics) {
 }
 
 // ------------------------------------------------------------
-// CRITIC AGENT — Detect contradictions + propose new rules
+// CRITIC AGENT
 // ------------------------------------------------------------
 function criticAgent(system, reasoning) {
   const exceptions = [];
@@ -125,7 +136,7 @@ function criticAgent(system, reasoning) {
 }
 
 // ------------------------------------------------------------
-// ALF — Human Simulator (Summaries + Actions)
+// ALF — Summaries + Actions
 // ------------------------------------------------------------
 function generateSummary(osint, sanctions, typology) {
   return `
@@ -163,7 +174,7 @@ function generateActions(readiness, osint, sanctions, typology, training) {
 }
 
 // ------------------------------------------------------------
-// ORCHESTRATOR — CE Agent (Final Output)
+// CE AGENT — FINAL SYNTHESIS
 // ------------------------------------------------------------
 function runCEAgent(data) {
   const { system, osint, sanctions, typology, training } = data;
@@ -175,7 +186,6 @@ function runCEAgent(data) {
   const exceptions = criticAgent(system, readiness);
   const patterns = learnFromExceptions();
 
-  // Log exceptions if any
   if (exceptions.length > 0) {
     logException({
       timestamp: new Date().toISOString(),
@@ -203,16 +213,13 @@ function runCEAgent(data) {
 // EXCEPTION LOGGING
 // ------------------------------------------------------------
 function logException(entry) {
-  const fs = require("fs");
   fs.appendFileSync("src/data/ce_exceptions.json", JSON.stringify(entry) + "\n");
 }
 
 // ------------------------------------------------------------
-// LEARNING LOOP — Detect repeated patterns
+// LEARNING LOOP
 // ------------------------------------------------------------
 function learnFromExceptions() {
-  const fs = require("fs");
-
   if (!fs.existsSync("src/data/ce_exceptions.json")) return {};
 
   const lines = fs.readFileSync("src/data/ce_exceptions.json", "utf8")
@@ -235,10 +242,9 @@ function learnFromExceptions() {
 }
 
 // ------------------------------------------------------------
-// EXPORTS (CommonJS)
+// EXPORTS
 // ------------------------------------------------------------
 module.exports = {
   runCEAgent,
   learnFromExceptions
 };
-
