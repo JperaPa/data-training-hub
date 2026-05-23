@@ -628,7 +628,52 @@
   <h2>Personal Finance Agent</h2>
   <div id="dth-finance-output"></div>
 </div>
+<div id="dashboard">
 
+  <section>
+    <h2>OSINT Agent</h2>
+    <input id="osint-input" placeholder="Search query" />
+    <button id="run-osint-btn">Run OSINT</button>
+    <pre id="osint-output"></pre>
+  </section>
+
+  <section>
+    <h2>Sanctions Agent</h2>
+    <input id="sanctions-input" placeholder="Name / Entity" />
+    <button id="run-sanctions-btn">Run Sanctions Check</button>
+    <pre id="sanctions-output"></pre>
+  </section>
+
+  <section>
+    <h2>Personal Finance Agent</h2>
+    <input id="finance-income" placeholder="Income" />
+    <textarea id="finance-notes" placeholder="Notes"></textarea>
+    <button id="run-finance-btn">Analyze</button>
+    <pre id="finance-output"></pre>
+  </section>
+
+  <section>
+    <h2>Scout Agent</h2>
+    <input id="scout-input" placeholder="Target" />
+    <button id="run-scout-btn">Run Recon</button>
+    <pre id="scout-output"></pre>
+  </section>
+
+  <section>
+    <h2>Typology Agent</h2>
+    <textarea id="typology-input" placeholder="Transaction description"></textarea>
+    <button id="run-typology-btn">Classify</button>
+    <pre id="typology-output"></pre>
+  </section>
+
+  <section>
+    <h2>Training Agent</h2>
+    <textarea id="training-input" placeholder="Training example"></textarea>
+    <button id="run-training-btn">Send to Training</button>
+    <pre id="training-output"></pre>
+  </section>
+
+</div>
 </div>
 
 <script>
@@ -876,8 +921,14 @@
       window.Globe = Globe;
     </script>
 
-    <!-- Load STZ‑IS runtime + dashboard logic -->
-    <script type="module" src="./ui/dashboard.js"></script>
-<script type="module" src="./runtime/runtime-init.js"></script>
+    </div> <!-- closes #dashboard -->
+
+<script>
+  let simulatedCpu = 3;
+  let simulatedNetwork = 0;
+</script>
+
+<script type="module" src="../js/dth-dashboard.js"></script>
+
   </body>
 </html>

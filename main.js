@@ -1,24 +1,21 @@
-// main.js — FINAL FIXED VERSION
+// main.js — FINAL VERSION (Option A Architecture)
 
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 // ------------------------------------------------------------
-// Load System Diagnostics Agent
+// Load Backend Runtime Agents
 // ------------------------------------------------------------
-const systemDiagnostics = require("./js/system-diagnostics.js");
-
-// ------------------------------------------------------------
-// Load CE Agent (correct API)
-// ------------------------------------------------------------
-const CEAgent = require("./js/ce-agent.js");
+const CEAgent = require("./src/runtime/ce-agent.js");
+const Diagnostics = require("./src/runtime/system-diagnostics.js");
+const RuntimeOrchestrator = require("./src/runtime/orchestrator.js");
 
 // ------------------------------------------------------------
 // Create Electron Window
 // ------------------------------------------------------------
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1200,
+    width: 1400,
     height: 900,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -27,7 +24,7 @@ function createWindow() {
     }
   });
 
-  win.loadFile("index.html");
+  win.loadFile("./src/html/index.html");
 }
 
 // ------------------------------------------------------------
@@ -42,12 +39,12 @@ app.whenReady().then(() => {
   });
 
   // ------------------------------------------------------------
-  // STARTUP CE SWEEP (fixed)
+  // STARTUP CE SWEEP
   // ------------------------------------------------------------
   setTimeout(async () => {
     console.log("[STARTUP] Running initial CE sweep...");
 
-    const system = await systemDiagnostics.run();
+    const system = await Diagnostics.run();
     const ce = CEAgent.runCEAgent({ system });
 
     console.log("[STARTUP] CE Score:", ce.readinessScore);
@@ -57,7 +54,7 @@ app.whenReady().then(() => {
   // SYSTEM DIAGNOSTICS HEARTBEAT (every 5 seconds)
   // ------------------------------------------------------------
   setInterval(async () => {
-    const system = await systemDiagnostics.run();
+    const system = await Diagnostics.run();
     console.log("[SYSTEM] Diagnostics heartbeat @", system.timestamp);
     console.log("[SYSTEM] Diagnostics:", system);
   }, 5000);
@@ -66,21 +63,11 @@ app.whenReady().then(() => {
   // CE HEARTBEAT (every 30 seconds)
   // ------------------------------------------------------------
   setInterval(async () => {
-    const system = await systemDiagnostics.run();
+    const system = await Diagnostics.run();
     const ce = CEAgent.runCEAgent({ system });
 
     console.log("[CE] Heartbeat — Score:", ce.readinessScore);
   }, 30000);
-
-  // ------------------------------------------------------------
-  // DAILY SNAPSHOT (every 24 hours)
-  // ------------------------------------------------------------
-  setInterval(async () => {
-    const system = await systemDiagnostics.run();
-    const ce = CEAgent.runCEAgent({ system });
-
-    console.log("[DAILY] CE Snapshot:", ce);
-  }, 24 * 60 * 60 * 1000);
 });
 
 // ------------------------------------------------------------

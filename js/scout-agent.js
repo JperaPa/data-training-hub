@@ -1,17 +1,22 @@
-// scout-agent.js
-export default {
-    name: "Scout Agent",
+import Orchestrator from "./renderer-orchestrator.js";
 
-    async run(input) {
-        // Example: fetch gas prices
-        const { zip } = input;
+const ScoutAgent = {
+  run(target) {
+    return Orchestrator.runTask({
+      agent: "scout",
+      action: "recon",
+      payload: { target }
+    });
+  },
 
-        try {
-            const res = await fetch(`https://api.example.com/gas?zip=${zip}`);
-            const data = await res.json();
-            return { success: true, data };
-        } catch (err) {
-            return { success: false, error: err.message };
-        }
-    }
+  handleResult(result) {
+    console.log("[ScoutAgent] Result received:", result);
+
+    const el = document.getElementById("scout-output");
+    if (el) el.textContent = JSON.stringify(result, null, 2);
+  }
 };
+
+Orchestrator.registerAgent("scout", ScoutAgent);
+
+export default ScoutAgent;

@@ -1,49 +1,45 @@
-/src
-  /constitution
-    /rules
-      ce_rules.json
-    /learning
-      ce_learning.json
-    diagnostics.js
-    verify-modules.js
+cd ~/Developer/data-training-hub
+tree -L 2
 
-  /runtime
-    /acting
-      ce-agent.js
-      sanctions-agent.js
-      typology-agent.js
-      osint-agent.js
-      finance-agent.js
-      training-agent.js
-      new-agent/        ← you already created this (perfect)
-    /critic
-      critic-agent.js   ← we will build this
-    /alf
-      alf-agent.js      ← we will build this
-    orchestrator.js     ← the brain of Zone 2
+THE CORRECT FINAL FOLDER STRUCTURE FOR DTH
 
-  /learning
-    rule-learning-agent.js
-    exception-feedback.js
+This is what your project must look like:
 
-  /ui
-    dashboard.js
-    dth-dashboard.js
-    /components
-      card.js
-      table.js
-
-  /core
-    router.js
-    state.js
-    utils.js
-
-/html
-  index.html
-
-/css
-  styles.css
-
-main.js
-preload.js
-package.json
+data-training-hub/
+│
+├── main.js
+├── preload.js
+├── package.json
+├── README.md
+│
+├── js/                     ← FRONTEND AGENTS (Renderer)
+│   ├── orchestrator.js
+│   ├── personal-finance-agent.js
+│   ├── osint-agent.js
+│   ├── sanctions-agent.js
+│   ├── typology-agent.js
+│   ├── training-agent.js
+│   ├── scout-agent.js
+│   ├── utils.js
+│   └── dth-dashboard.js
+│
+├── src/
+│   ├── html/
+│   ├── css/
+│   ├── ui/
+│   ├── data/
+│   │   ├── ce_rules.json
+│   │   ├── ce_exceptions.json
+│   │   └── ce_learning.json
+│   │
+│   └── runtime/            ← BACKEND AGENTS (Main Process)
+│       ├── ce-agent.js
+│       ├── system-diagnostics.js
+│       ├── runtime-init.js
+│       ├── orchestrator.js
+│       ├── critic/
+│       │   └── critic-agent.js
+│       └── alf/
+│           └── alf-agent.js
+│
+└── agents/                 ← Documentation / ideas

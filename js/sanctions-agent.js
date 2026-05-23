@@ -1,13 +1,24 @@
-module.exports = async function runSanctionsAgent() {
-  return {
-    alerts: [],
-    listsChecked: []
-  };
+import Orchestrator from "./renderer-orchestrator.js";
+
+const SanctionsAgent = {
+  run(name) {
+    return Orchestrator.runTask({
+      agent: "sanctions",
+      action: "check",
+      payload: { name }
+    });
+  },
+
+  handleResult(result) {
+    console.log("[SanctionsAgent] Result received:", result);
+
+    const outputEl = document.getElementById("sanctions-output");
+    if (outputEl) {
+      outputEl.textContent = JSON.stringify(result, null, 2);
+    }
+  }
 };
 
-/*
-UPGRADE PATH:
-- Load OFAC, UN, EU sanctions lists
-- Add fuzzy matching
-- Add entity resolution
-*/
+Orchestrator.registerAgent("sanctions", SanctionsAgent);
+
+export default SanctionsAgent;
