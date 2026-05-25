@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Wants from agents:
 				Add recruiter roles:
 					recruiter/scout agent idea to track jobs
@@ -45,6 +46,8 @@ So that’s exactly what I’m going to do.
 
 
 
+=======
+>>>>>>> 1de2056e8eb6c99e92d8c6aabe4f08ea59150df3
 ---
 1. High-level DTH architecture
 Core pieces:
@@ -188,6 +191,7 @@ If you want, next step I can:
 • Take one agent (e.g., Personal Finance or AML/BSA)
 • Write a full, ready-to-use system prompt + JSON output schema
 • And a few example calls you can wire into your DTH dashboard.
+<<<<<<< HEAD
 Which agent do you want to operationalize first?
 
 
@@ -254,3 +258,6 @@ You can ask the DTH:
 • “How do I manage stress?”
 • “How do I plan my future?”
 This is real value, not code.
+=======
+Which agent do you want to operationalize first?
+>>>>>>> 1de2056e8eb6c99e92d8c6aabe4f08ea59150df3
