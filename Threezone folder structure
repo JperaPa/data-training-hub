@@ -5,41 +5,122 @@ THE CORRECT FINAL FOLDER STRUCTURE FOR DTH
 
 This is what your project must look like:
 
-data-training-hub/
-│
-├── main.js
-├── preload.js
-├── package.json
-├── README.md
-│
-├── js/                     ← FRONTEND AGENTS (Renderer)
-│   ├── orchestrator.js
-│   ├── personal-finance-agent.js
+franciscoperalta@franciscos-Mac-mini data-training-hub % cd ~/Developer/data-training-hub
+tree -L 2
+.
+├── Agent ideas
+├── agents
+│   └── <agent-name>.js
+├── js
+│   ├── core
+│   ├── dth-dashboard.js
+│   ├── globe.js
 │   ├── osint-agent.js
+│   ├── personal-finance-agent.js
+│   ├── readiness.js
+│   ├── renderer-orchestrator.js
+│   ├── rules.js
 │   ├── sanctions-agent.js
-│   ├── typology-agent.js
-│   ├── training-agent.js
 │   ├── scout-agent.js
+│   ├── training-agent.js
+│   ├── typology-agent.js
 │   ├── utils.js
-│   └── dth-dashboard.js
-│
-├── src/
-│   ├── html/
-│   ├── css/
-│   ├── ui/
-│   ├── data/
-│   │   ├── ce_rules.json
-│   │   ├── ce_exceptions.json
-│   │   └── ce_learning.json
-│   │
-│   └── runtime/            ← BACKEND AGENTS (Main Process)
-│       ├── ce-agent.js
-│       ├── system-diagnostics.js
-│       ├── runtime-init.js
-│       ├── orchestrator.js
-│       ├── critic/
-│       │   └── critic-agent.js
-│       └── alf/
-│           └── alf-agent.js
-│
-└── agents/                 ← Documentation / ideas
+│   └── verify-modules.js
+├── main.js
+├── node_modules
+│   ├── @electron
+│   ├── @sindresorhus
+│   ├── @szmarczak
+│   ├── @types
+│   ├── boolean
+│   ├── buffer-crc32
+│   ├── cacheable-lookup
+│   ├── cacheable-request
+│   ├── clone-response
+│   ├── debug
+│   ├── decompress-response
+│   ├── defer-to-connect
+│   ├── define-data-property
+│   ├── define-properties
+│   ├── detect-node
+│   ├── electron
+│   ├── end-of-stream
+│   ├── env-paths
+│   ├── es-define-property
+│   ├── es-errors
+│   ├── es6-error
+│   ├── escape-string-regexp
+│   ├── extract-zip
+│   ├── fd-slicer
+│   ├── fs-extra
+│   ├── get-stream
+│   ├── global-agent
+│   ├── globalthis
+│   ├── gopd
+│   ├── got
+│   ├── graceful-fs
+│   ├── has-property-descriptors
+│   ├── http-cache-semantics
+│   ├── http2-wrapper
+│   ├── json-buffer
+│   ├── json-stringify-safe
+│   ├── jsonfile
+│   ├── keyv
+│   ├── lowercase-keys
+│   ├── matcher
+│   ├── mimic-response
+│   ├── ms
+│   ├── node-fetch
+│   ├── normalize-url
+│   ├── object-keys
+│   ├── once
+│   ├── p-cancelable
+│   ├── papaparse
+│   ├── pend
+│   ├── progress
+│   ├── pump
+│   ├── quick-lru
+│   ├── resolve-alpn
+│   ├── responselike
+│   ├── roarr
+│   ├── semver
+│   ├── semver-compare
+│   ├── serialize-error
+│   ├── sprintf-js
+│   ├── sumchecker
+│   ├── tr46
+│   ├── type-fest
+│   ├── undici-types
+│   ├── universalify
+│   ├── webidl-conversions
+│   ├── whatwg-url
+│   ├── wrappy
+│   └── yauzl
+├── package-lock.json
+├── package.json
+├── preload.js
+├── README.md
+├── src
+│   ├── css
+│   ├── data
+│   ├── html
+│   ├── js
+│   ├── runtime
+│   └── ui
+├── Threezone backbone
+├── Threezone folder structure
+├── verify-modules.js
+└── Work career
+    ├── Financial Crime Research
+    ├── index.html
+    ├── intel-globe-data.json
+    ├── intelligence.json
+    ├── main.js
+    ├── OSINT & Data Collection
+    ├── package.json
+    ├── Personal Development
+    ├── playbook.json
+    └── Public Reporting & Publishing
+
+85 directories, 29 files
+franciscoperalta@franciscos-Mac-mini data-training-hub % 

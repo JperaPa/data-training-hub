@@ -2,6 +2,82 @@
 
 DTH architecture maps (the Agent Pattern with Constitution → Acting Agent → Critic Agent → ALF → Rule Learning Loop)
 
+Below is a single, continuous mission statement that merges the entire chat history into one coherent document.
+No emojis. No panes. No separators. Fully copy‑ready.
+---
+DATA TRAINING HUB (DTH)
+MISSION STATEMENT AND ARCHITECTURE ALIGNMENT DOCUMENT
+Purpose
+The Data Training Hub (DTH) exists to evolve from a mixed, single‑layer codebase into a clean, two‑layer, multi‑agent system built on the Three‑Zone Agent Pattern: Constitution, Runtime Pipeline, and Learning Loop. The mission is to create a stable backend runtime, a modular renderer ecosystem, and a closed‑loop agent architecture capable of classification, reasoning, evaluation, human‑simulated approval, and continuous rule learning.
+Strategic Objective
+Transform DTH into a fully aligned implementation of the Agent Pattern:
+1. Constitution Layer: A unified source of truth containing rules, policies, constraints, diagnostics, and system integrity checks.
+2. Runtime Pipeline: A structured inference flow consisting of Acting Agents, a Critic Agent, an ALF human‑simulator layer, and a central orchestrator.
+3. Learning Loop: A feedback system that captures exceptions, updates rules, and evolves the Constitution over time.
+Completed Achievements
+Backend Architecture
+• Removed legacy backend files from /js/.
+• Migrated backend to /src/runtime/.
+• Implemented final backend modules: ce-agent.js, critic-agent.js, alf-agent.js, orchestrator.js, schemas.js, system-diagnostics.js.
+• Established a complete CE → Critic → ALF pipeline.
+• Standardized a unified AGENT_RESPONSE schema.
+• Converted backend to CommonJS and stabilized Electron main process loading.
+Renderer Architecture
+• Added js/renderer-orchestrator.js.
+• Updated all renderer agents to a unified template.
+• Connected renderer agents to backend orchestrator via IPC.
+• Dashboard buttons now trigger the full chain: UI → Renderer Agent → IPC → Backend → CE → Critic → ALF → UI.
+• All six agents wired into the dashboard: OSINT, Sanctions, Personal Finance, Scout, Typology, Training.
+• Output panels now receive structured backend responses.
+Security and Git
+• Identified a leaked token in an old commit.
+• Prepared for history rewrite via fresh clone.
+• Installed hardened .gitignore and pre‑commit secret‑blocking hook.
+Initial State Summary
+The project began with backend and renderer code mixed together, duplicate agents across folders, inconsistent module systems, cross‑layer imports, and unstable folder structure. Renderer agents were imported into the backend, ES modules and CommonJS were mixed, and Electron startup was unreliable.
+Current State Summary
+Backend
+• Clean, stable, isolated in src/runtime/.
+• CE, diagnostics, critic, ALF, and orchestrator fully functional.
+• No backend‑side module conflicts.
+Renderer
+• Agents intact and updated.
+• Renderer orchestrator created.
+• IPC bridge pending finalization.
+• Dashboard connected to backend tasks.
+Three‑Zone Architecture Mapping
+Zone 1: Constitution
+Mapped to: src/data/ce_rules.json, src/data/ce_learning.json, js/rules.js, js/verify-modules.js, js/readiness.js, src/runtime/system-diagnostics.js.
+These files collectively represent rules, learning data, diagnostics, and module verification. The Constitution layer exists but is not yet consolidated into a single module.
+Zone 2: Runtime Pipeline
+Mapped to:
+Acting Agents: js/osint-agent.js, js/personal-finance-agent.js, js/sanctions-agent.js, js/scout-agent.js, js/typology-agent.js, js/training-agent.js.
+Critic Agent: src/runtime/critic-agent.js, js/readiness.js, system-diagnostics.js.
+ALF Layer: src/runtime/alf-agent.js.
+Orchestrators: src/runtime/orchestrator.js and js/renderer-orchestrator.js.
+This zone is now fully implemented and functional.
+Zone 3: Learning and Evolution Loop
+Mapped to: src/data/ce_learning.json, js/training-agent.js, js/verify-modules.js.
+The foundation exists, but the system lacks a dedicated rule-learning agent, exception feedback routing, and automated Constitution updates.
+Next Steps: Personal Finance Agent Visuals
+1. Define structured finance output schema including income, expenses, savings rate, and recommendations.
+2. Update finance renderer agent to parse structured responses and render income summary, expense breakdown, savings rate, and recommendations.
+3. Add a visual container to the dashboard.
+4. Build visual elements such as savings progress bar, expense list, and summary blocks.
+5. Implement backend finance logic to compute savings rate and generate recommendations.
+6. Optionally add CE, Critic, and ALF badges to the UI.
+End State Vision
+The Personal Finance Agent becomes the first fully visualized agent in DTH, demonstrating the complete CE → Critic → ALF → UI loop.
+DTH becomes a two‑layer, multi‑agent system aligned with the Three‑Zone architecture, capable of structured reasoning, evaluation, human‑simulated approval, and continuous rule evolution.
+Strategic Roadmap
+1. Consolidate Constitution into a unified module.
+2. Finalize IPC bridge and renderer wiring.
+3. Implement a Rule Learning Agent to complete Zone 3.
+4. Establish feedback routing from ALF to the learning loop.
+5. Expand visualized agents beyond Personal Finance.
+6. Maintain strict separation between backend runtime and renderer ecosystem.
+Mission Summary
+DTH is transitioning into a clean, modular, multi‑agent architecture aligned with the Three‑Zone Agent Pattern. The backend runtime is now stable, the renderer ecosystem is structured, and the CE → Critic → ALF pipeline is operational. The next phase focuses on UI visualization, learning loop completion, and Constitution consolidation. This mission statement serves as the reference document for measuring progress against the overall design plan.
 Data Training Hub — Mission Brief (Current Status)
 1. Objective
 Transition DTH from a single‑layer, mixed‑module architecture into a clean, two‑layer system with a stable backend runtime and a modular renderer agent ecosystem.

@@ -1,6 +1,8 @@
-// main.js — FINAL VERSION (Option A Architecture)
+// ------------------------------------------------------------
+// main.js — CLEAN FIXED VERSION
+// ------------------------------------------------------------
 
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 // ------------------------------------------------------------
@@ -11,7 +13,7 @@ const Diagnostics = require("./src/runtime/system-diagnostics.js");
 const RuntimeOrchestrator = require("./src/runtime/orchestrator.js");
 
 // ------------------------------------------------------------
-// Create Electron Window
+// Create Electron Window (ONLY ONE VERSION)
 // ------------------------------------------------------------
 function createWindow() {
   const win = new BrowserWindow({
@@ -53,10 +55,19 @@ app.whenReady().then(() => {
   // ------------------------------------------------------------
   // SYSTEM DIAGNOSTICS HEARTBEAT (every 5 seconds)
   // ------------------------------------------------------------
+  function broadcastDiagnostics(system) {
+    const allWindows = BrowserWindow.getAllWindows();
+    allWindows.forEach(win => {
+      win.webContents.send("diagnostics-update", system);
+    });
+  }
+
   setInterval(async () => {
     const system = await Diagnostics.run();
     console.log("[SYSTEM] Diagnostics heartbeat @", system.timestamp);
     console.log("[SYSTEM] Diagnostics:", system);
+
+    broadcastDiagnostics(system);
   }, 5000);
 
   // ------------------------------------------------------------
