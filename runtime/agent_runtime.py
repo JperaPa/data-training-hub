@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Add project root to Python path
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
+
 from runtime.message_bus import MessageBus
 from runtime.memory_store import MemoryStore
 

@@ -2,6 +2,7 @@ from modules.ingest import load_bank_statements, load_budget
 from modules.clean import clean_columns
 from modules.categorize import categorize
 from modules.budget_compare import compare_budget
+from modules.pdf_reader import read_bills
 
 import pandas as pd
 
