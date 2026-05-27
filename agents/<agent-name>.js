@@ -17,4 +17,4 @@ const AgentName = {
 
 Orchestrator.registerAgent("agent-name", AgentName);
 
-export default AgentName;
+export default AgentName; 

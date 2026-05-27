@@ -78,3 +78,49 @@ runCEAgent(systemState)
 - Disk full rule triggered 12 times
 - ActivityWatch unreachable 8 times
 [ Accept ] [ Reject ]
+async function runDTH(inputText) {
+    try {
+        const response = await fetch("/run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ input: inputText })
+        });
+
+        const data = await response.json();
+        console.log("DTH Output:", data);
+
+        // OPTIONAL: update dashboard UI
+        const outputBox = document.getElementById("dth-output");
+        if (outputBox) {
+            outputBox.innerText = JSON.stringify(data, null, 2);
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("DTH Error:", err);
+    }
+}
+document.getElementById("run-dth-btn").addEventListener("click", () => {
+    const input = document.getElementById("dth-input").value;
+    runDTH(input);
+});
+async function runDTH(inputText) {
+    const response = await fetch("/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: inputText })
+    });
+
+    const data = await response.json();
+
+    const outputBox = document.getElementById("dth-output");
+    if (outputBox) {
+        outputBox.innerText = JSON.stringify(data, null, 2);
+    }
+}
+document.getElementById("run-dth-btn").addEventListener("click", () => {
+    const input = document.getElementById("dth-input").value;
+    runDTH(input);
+});
+
