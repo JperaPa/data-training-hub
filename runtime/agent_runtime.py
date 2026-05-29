@@ -12,6 +12,9 @@ from agents.ce_agent import CEAgent
 from agents.critic_agent import CriticAgent
 from agents.alf_agent import ALFAgent
 
+from agents.steward_agent import StewardAgent
+self.steward = StewardAgent(self.memory, self.bus)
+
 
 class AgentRuntime:
     def __init__(self):

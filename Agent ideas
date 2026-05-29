@@ -6,7 +6,10 @@ Agent for coding:
 							Purpose:
 									Overwatch is the supervisory intelligence layer responsible for maintaining the operational integrity, workflow continuity, and system health of the Data Training Hub (DTH). It ensures that all agents, pipelines, and data flows operate within expected parameters and alerts the user when intervention is required.
 
-							Functional Ideas:		
+							Functional Ideas:	Cybersecurity checks
+												scheduled 	"npm ls" scans, purging of memomry junk
+												Goal tracking (short, Med, long term progress)
+
 
 
 
@@ -24,6 +27,8 @@ Agent for coding:
 				Home sale searches in 11
 
 
+				DTH entertainment and home appliance (alexas,xboxs)
+
 Admin executive agents:
 					
 			
@@ -32,7 +37,9 @@ Admin executive agents:
 				reminders feed from MAC apps gdrive
 
 			Budgeting
-			ingest utility bills Bank statements
+			ingest utility bills Bank statements compares my consumption rates vs national and state stats
+			local supermarket (jewel osco, aldi) weekly sales vs walmart/corporate chains
+				retailers 
 
 
   		Agents for my area safety/personal safety inteligence agent

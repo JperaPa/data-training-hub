@@ -1,0 +1,214 @@
+
+---
+1. High-level DTH architecture
+Core pieces:
+• DTH Orchestrator
+	◦ Role: Routes tasks to the right agent, keeps minimal history, enforces “mission scope” per agent.
+	◦ Inputs: Your natural language requests.
+	◦ Outputs: Calls to:
+		▪︎ Personal Finance Agent
+		▪︎ Scout Agent/conducts homework for upcoming projects, logic for where to look
+		▪︎ Machine Monitor Agent
+		▪︎ Geo-Politics Agent
+		▪︎ AML/BSA Agent
+		▪︎ Infra/Network Agent
+• Agent Contracts (per agent)
+	◦ Mission: One sentence purpose.
+	◦ ROE (Rules of Engagement): What it can/can’t do.
+	◦ Data sources: CSVs, APIs, YouTube transcripts, .gov, ACAMS, etc.
+	◦ Outputs: Clear, structured JSON (metrics, flags, recommended actions).
+---
+2. Personal finance agent
+Mission: Optimize your cash flow, risk, and benefit usage as a veteran.
+Submodules:
+• Cost-of-living monitor
+	◦ Data:
+		▪︎ National gas avg vs local
+		▪︎ Mortgage rate avg vs your rate
+		▪︎ Food basket (meat, staples)
+		▪︎ Discount sources (grocery, gas, utilities, veteran discounts)
+	◦ Output:
+		▪︎ “You are paying X% above/below national/local averages.”
+		▪︎ “Top 3 switches to reduce monthly burn by $Y.”
+• Budget supervisor/admin
+	◦ Data ingestion:
+		▪︎ CSV exports from bank, credit cards, utilities.
+		▪︎ Map categories → your budget sheet (Google Sheets / local CSV).
+	◦ Tasks:
+		▪︎ Update budget sheet automatically.
+		▪︎ Detect overspend vs targets.
+		▪︎ Recommend:
+			• VA benefits optimization
+			• Insurance premium reductions
+			• Utility provider changes
+			• Snowball debt plan (ordered list: smallest → largest, with payment schedule).
+---
+3. Scout agent (vehicles, private sellers only)
+Mission: Find high-value, underpriced vehicles from private sellers only.
+• Filters:
+	◦ Private seller only
+	◦ Make/model/year ranges you define
+	◦ Max price, mileage, distance
+• Signals:
+	◦ Price vs KBB / market avg
+	◦ Time on market
+	◦ Red flags (salvage, missing title, weird description)
+• Output:
+	◦ Shortlist with “mission-ready” score and reasons.
+---
+4. Machine/activity monitoring agent
+Mission: Watch your system like a squad leader watching Marines under load.
+• Metrics:
+	◦ CPU % (favorites: top 5 processes)
+	◦ Memory usage (favorites: top 5)
+	◦ Disk usage & I/O
+	◦ Network throughput
+	◦ Internet speed test (periodic or on-demand)
+• Outputs:
+	◦ “Strain report” with bottlenecks.
+	◦ Flags like:
+		▪︎ “Browser with 42 tabs is consuming 2.3 GB RAM.”
+		▪︎ “Background process X is pegging CPU at 35%.”
+You already started this with your dashboard—this agent just formalizes the logic and language.
+---
+5. Geo-politics agent
+Mission: Track power, conflict, and human rights in a way that cuts through noise.
+• Sources:
+	◦ Transcripts from Vaush, HasanAbi, etc. (for commentary)
+	◦ War/casualty reports
+	◦ Human rights orgs
+	◦ Hate crime / violence stats
+• Rules:
+	◦ Separate commentary from verified reporting.
+	◦ Always label:
+		▪︎ “Opinion/analysis”
+		▪︎ “Confirmed data”
+• Outputs:
+	◦ Situation briefs:
+		▪︎ “Theaters of conflict”
+		▪︎ “Key actors”
+		▪︎ “Human rights impact”
+		▪︎ “Trend: escalation/de-escalation”
+---
+6. AML/BSA investigator & SAR writer agent
+This is your main weapon system.
+Mission: Support your growth from AML analyst → high-caliber examiner-level operator.
+Submodules:
+• Career development
+	◦ Roadmap: AML Analyst → Senior → Team Lead → Examiner (OCC/FDIC).
+	◦ Skills, certifications (ACAMS, CRCM, etc.), and timelines.
+	◦ Self-advocacy scripts for performance reviews, promotions, and interviews.
+• Typology & trend tracker
+	◦ SAR filing rates by state.
+	◦ SAR types (structuring, funnel accounts, romance scams, etc.).
+	◦ Enforcement actions (OCC, FDIC, FinCEN) summarized into:
+		▪︎ “What went wrong”
+		▪︎ “What a good program would have done”
+		▪︎ “Lessons for your daily work”
+• SAR writing SOP
+	◦ Frameworks:
+		▪︎ 5Ws + H + Money Flow
+		▪︎ Narrative templates (but not boilerplate junk).
+	◦ Output:
+		▪︎ Draft SAR narratives from structured case data.
+		▪︎ Red flag checklists.
+• Regulatory intel
+	◦ OFAC & FinCEN advisories.
+	◦ Tax evasion, sanctions, ML/BSA violations.
+	◦ Summarized into:
+		▪︎ “What changed”
+		▪︎ “Who is impacted”
+		▪︎ “What you should do differently on Monday.”
+---
+7. Infra / DTH network & cloud agent
+Mission: Build and maintain your DTH/CC network, storage, and backups.
+• Tasks:
+	◦ Propose home lab / server layout.
+	◦ Sync key data to Google Drive/Cloud.
+	◦ Keep a map of:
+		▪︎ Where logs live
+		▪︎ Where CSVs live
+		▪︎ Where dashboards read from
+---
+8. How to turn this into actual agent prompts
+For each agent, you want a prompt skeleton like:
+Role: You are the [Agent Name], responsible for [mission].
+Scope: You only operate on [data sources]. You ignore anything outside this scope.
+Outputs: Always respond in JSON with fields: [x, y, z].
+Constraints:
+• Keep history minimal and only related to this mission.
+• If data is missing, state what’s missing and what you’d need.
+If you want, next step I can:
+• Take one agent (e.g., Personal Finance or AML/BSA)
+• Write a full, ready-to-use system prompt + JSON output schema
+• And a few example calls you can wire into your DTH dashboard.
+<<<<<<< HEAD
+Which agent do you want to operationalize first?
+
+
+
+
+
+THE REAL VALUE OF THE DTH (Your Life, Not the Code)
+Here are the core functions your DTH can deliver — TODAY
+
+---
+9. Daily Intelligence Feed (AML + Geo + OSINT)
+Your dashboard can show:
+• FinCEN alerts
+• DOJ press releases
+• OFAC updates
+• FATF typologies
+• trending laundering patterns
+• darknet chatter
+• crypto risk signals
+• regional risk indicators
+This is real-world useful for your job and career.
+---
+10. Personal Knowledge Engine
+You can use the DTH to:
+• store your notes
+• store your SAR patterns
+• store your case learnings
+• store your typologies
+• store your workflows
+• store your scripts
+• store your OSINT techniques
+This becomes your personal AML brain.
+---
+11. Career Accelerator
+The DTH can help you:
+• write SARs
+• analyze cases
+• prepare for interviews
+• build your portfolio
+• generate AML dashboards
+• practice SQL
+• practice Python
+• build your resume
+• build your LinkedIn content
+This is directly useful for your life.
+---
+12. Personal Life Hub
+You can use the DTH to:
+• track your goals
+• track your habits
+• track your finances
+• track your workouts
+• track your mental health
+• track your projects
+• track your learning
+This becomes your personal command center.
+---
+13. AI-Powered Decision Engine
+You can ask the DTH:
+• “Should I take this job?”
+• “How do I negotiate salary?”
+• “How do I structure my day?”
+• “How do I build discipline?”
+• “How do I manage stress?”
+• “How do I plan my future?”
+This is real value, not code.
+=======
+Which agent do you want to operationalize first?
+>>>>>>> 1de2056e8eb6c99e92d8c6aabe4f08ea59150df3
