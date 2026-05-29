@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-=======
-// ------------------------------------------------------------
-// ELECTRON BOOTSTRAP
-// ------------------------------------------------------------
->>>>>>> a7b3bbce0aa6b5b2dd7437d4756c4815dbf72e5c
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
