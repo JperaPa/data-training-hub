@@ -1,5 +1,4 @@
-cat > scripts/run_review.js <<'EOF'
-#!/usr/bin/env node
+
 (async () => {
   try {
     const runCompliance = require('../src/js/overwatch-compliance');
@@ -15,5 +14,3 @@ cat > scripts/run_review.js <<'EOF'
     process.exit(1);
   }
 })();
-EOF
-chmod +x scripts/run_review.js
