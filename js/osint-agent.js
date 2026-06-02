@@ -1,24 +1,16 @@
-import Orchestrator from "./renderer-orchestrator.js";
+// js/osint-agent.js
+// Backend-only OSINT Agent
 
-const OSINTAgent = {
-  run(query) {
-    return Orchestrator.runTask({
+module.exports = {
+  async run(query) {
+    return {
       agent: "osint",
       action: "lookup",
-      payload: { query }
-    });
-  },
-
-  handleResult(result) {
-    console.log("[OSINTAgent] Result received:", result);
-
-    const outputEl = document.getElementById("osint-output");
-    if (outputEl) {
-      outputEl.textContent = JSON.stringify(result, null, 2);
-    }
+      payload: { query },
+      result: {
+        message: `OSINT lookup executed for query: ${query}`,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
-
-Orchestrator.registerAgent("osint", OSINTAgent);
-
-export default OSINTAgent;

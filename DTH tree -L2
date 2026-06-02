@@ -1,0 +1,10 @@
+Terminal 1
+cd renderer
+npm run dev
+
+Terminal 2
+npm start
+
+
+cd ~/Developer/data-training-hub
+tree -L 2

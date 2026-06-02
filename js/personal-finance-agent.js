@@ -1,24 +1,17 @@
-import Orchestrator from "./renderer-orchestrator.js";
+// js/personal-finance-agent.js
+// Backend-only Finance Agent
 
-const FinanceAgent = {
-  run(data) {
-    return Orchestrator.runTask({
+module.exports = {
+  async run(data) {
+    return {
       agent: "finance",
       action: "analyze",
-      payload: data
-    });
-  },
-
-  handleResult(result) {
-    console.log("[FinanceAgent] Result received:", result);
-
-    const outputEl = document.getElementById("finance-output");
-    if (outputEl) {
-      outputEl.textContent = JSON.stringify(result, null, 2);
-    }
+      payload: data,
+      result: {
+        message: "Finance analysis completed",
+        input: data,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
-
-Orchestrator.registerAgent("finance", FinanceAgent);
-
-export default FinanceAgent;

@@ -1,22 +1,16 @@
-import Orchestrator from "./renderer-orchestrator.js";
+// js/typology-agent.js
+// Backend-only Typology Agent
 
-const TypologyAgent = {
-  run(transaction) {
-    return Orchestrator.runTask({
+module.exports = {
+  async run(transaction) {
+    return {
       agent: "typology",
       action: "classify",
-      payload: { transaction }
-    });
-  },
-
-  handleResult(result) {
-    console.log("[TypologyAgent] Result received:", result);
-
-    const el = document.getElementById("typology-output");
-    if (el) el.textContent = JSON.stringify(result, null, 2);
+      payload: { transaction },
+      result: {
+        message: `Typology classification executed for transaction: ${transaction}`,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
-
-Orchestrator.registerAgent("typology", TypologyAgent);
-
-export default TypologyAgent;

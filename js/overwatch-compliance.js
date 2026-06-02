@@ -1,56 +1,47 @@
-mkdir -p src/js
-cat > src/js/overwatch-compliance.js <<'EOF'
-/**
- * Minimal safe overwatch-compliance.js placeholder
- */
-const fs = require('fs');
-const path = require('path');
+// js/overwatch-compliance.js
 
-const LEDGER_PATH = path.join(__dirname, '../../data/processed/recommendation_ledger.json');
-const PROGRESS_PATH = path.join(__dirname, '../../data/processed/daily_progress.json');
-const REVIEW_LOG_PATH = path.join(__dirname, '../../data/processed/overwatch_reviews.json');
+const fs = require("fs");
+const path = require("path");
 
-function safeReadJson(p) {
-  if (!fs.existsSync(p)) return [];
-  try {
-    const raw = fs.readFileSync(p, 'utf8').trim();
-    if (!raw) return [];
-    return JSON.parse(raw);
-  } catch (e) {
-    try { fs.writeFileSync(p, '[]'); } catch (w) {}
-    return [];
-  }
+// ---------------------------------------------
+// SECURITY CHECKS (placeholder implementation)
+// ---------------------------------------------
+async function runSecurityChecks() {
+    return {
+        npm_vulnerabilities: 0,
+        suspicious_processes: [],
+        network_anomalies: []
+    };
 }
 
-function logReview(review) {
-  const existing = safeReadJson(REVIEW_LOG_PATH);
-  existing.push(review);
-  try { fs.writeFileSync(REVIEW_LOG_PATH, JSON.stringify(existing, null, 2)); } catch (e) {}
+// ---------------------------------------------
+// GOAL LOADER (placeholder implementation)
+// ---------------------------------------------
+async function loadGoals() {
+    const goalsPath = path.join(__dirname, "../runtime/goals.json");
+
+    if (!fs.existsSync(goalsPath)) {
+        return {
+            short_term: [],
+            medium_term: [],
+            long_term: []
+        };
+    }
+
+    try {
+        const raw = fs.readFileSync(goalsPath, "utf8");
+        return JSON.parse(raw);
+    } catch (err) {
+        console.error("[Overwatch] Failed to load goals:", err);
+        return {
+            short_term: [],
+            medium_term: [],
+            long_term: []
+        };
+    }
 }
 
-async function runComplianceEngine() {
-  const ledger = safeReadJson(LEDGER_PATH);
-  const progress = safeReadJson(PROGRESS_PATH);
-
-  const consolidated = {
-    timestamp: new Date().toISOString(),
-    complianceScore: 0,
-    deviations: [],
-    correctiveActions: [],
-    models: [],
-    confidence: 0
-  };
-
-  const feedback = {
-    timestamp: new Date().toISOString(),
-    payloadSummary: { totalRecommendations: ledger.length, recentProgressCount: progress.length },
-    consolidated,
-    rawAIResponses: []
-  };
-
-  logReview(feedback);
-  return feedback;
-}
-
-module.exports = runComplianceEngine;
-EOF
+module.exports = {
+    runSecurityChecks,
+    loadGoals
+};

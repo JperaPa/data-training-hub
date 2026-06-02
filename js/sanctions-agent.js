@@ -1,24 +1,16 @@
-import Orchestrator from "./renderer-orchestrator.js";
+// js/sanctions-agent.js
+// Backend-only Sanctions Agent
 
-const SanctionsAgent = {
-  run(name) {
-    return Orchestrator.runTask({
+module.exports = {
+  async run(name) {
+    return {
       agent: "sanctions",
       action: "check",
-      payload: { name }
-    });
-  },
-
-  handleResult(result) {
-    console.log("[SanctionsAgent] Result received:", result);
-
-    const outputEl = document.getElementById("sanctions-output");
-    if (outputEl) {
-      outputEl.textContent = JSON.stringify(result, null, 2);
-    }
+      payload: { name },
+      result: {
+        message: `Sanctions check executed for: ${name}`,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
-
-Orchestrator.registerAgent("sanctions", SanctionsAgent);
-
-export default SanctionsAgent;

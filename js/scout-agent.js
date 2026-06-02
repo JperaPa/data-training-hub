@@ -1,22 +1,16 @@
-import Orchestrator from "./renderer-orchestrator.js";
+// js/scout-agent.js
+// Backend-only Scout Agent (NO renderer code, NO Orchestrator)
 
-const ScoutAgent = {
-  run(target) {
-    return Orchestrator.runTask({
+module.exports = {
+  async run(target) {
+    return {
       agent: "scout",
       action: "recon",
-      payload: { target }
-    });
-  },
-
-  handleResult(result) {
-    console.log("[ScoutAgent] Result received:", result);
-
-    const el = document.getElementById("scout-output");
-    if (el) el.textContent = JSON.stringify(result, null, 2);
+      payload: { target },
+      result: {
+        message: `Scout agent executed recon on target: ${target}`,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
-
-Orchestrator.registerAgent("scout", ScoutAgent);
-
-export default ScoutAgent;

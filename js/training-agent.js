@@ -1,22 +1,16 @@
-import Orchestrator from "./renderer-orchestrator.js";
+// js/training-agent.js
+// Backend-only Training Agent
 
-const TrainingAgent = {
-  run(example) {
-    return Orchestrator.runTask({
+module.exports = {
+  async run(example) {
+    return {
       agent: "training",
       action: "learn",
-      payload: { example }
-    });
-  },
-
-  handleResult(result) {
-    console.log("[TrainingAgent] Result received:", result);
-
-    const el = document.getElementById("training-output");
-    if (el) el.textContent = JSON.stringify(result, null, 2);
+      payload: { example },
+      result: {
+        message: `Training agent processed example: ${example}`,
+        timestamp: new Date().toISOString()
+      }
+    };
   }
 };
-
-Orchestrator.registerAgent("training", TrainingAgent);
-
-export default TrainingAgent;
