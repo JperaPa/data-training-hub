@@ -1,0 +1,104 @@
+A 3D interactive globe that visualizes the hidden flows of the criminal economy:
+money, goods, people, and digital activity across borders.
+Instead of tourism or history, the app becomes a global illicit‑finance intelligence dashboard.
+
+CORE EXPERIENCE
+1. Global Illicit Financial Flows Layer
+A dynamic overlay showing:
+• Total estimated illicit flows by country
+• Inbound vs outbound flows
+• Hotspots of laundering, transit, and extraction
+• Color‑coded risk intensity (heatmap)
+Data animates as arcs between countries:
+• Thickness = volume
+• Color = typology (drugs, fraud, human trafficking, etc.)
+
+2. Criminal Typology Breakdown
+Each country or region displays a stacked profile of major illicit‑economy categories:
+Estimated annual global values (based on your provided numbers):
+• Drug Trafficking: $1.1 trillion
+• Fraud & Bank Fraud: $579.4 billion
+• Human Trafficking: $528.5 billion
+• Cross‑Border Laundered Funds: $482.9 billion
+• Terrorist Financing: $16.2 billion
+Each category becomes a toggleable layer on the globe.
+
+3. Flow Animations
+When a user selects a typology:
+• Drug trafficking: routes from production → transit → consumer markets
+• Human trafficking: origin → transit → exploitation hubs
+• Fraud: digital‑fraud hotspots, mule‑account corridors
+• Terrorist financing: regional clusters (with disclaimers about extremist groups’ harm)
+• Cross‑border laundering: offshore centers, secrecy jurisdictions, correspondent banking corridors
+Arcs animate like a network map, showing direction and magnitude.
+
+4. Country Intelligence Cards
+Tap a country → see:
+• Estimated illicit inflows/outflows
+• Top criminal markets
+• AML/CTF effectiveness score
+• Known laundering typologies
+• Offshore exposure
+• High‑risk sectors (real estate, casinos, crypto, trade finance)
+
+5. Time Slider
+Drag from 2000 → 2026 to watch:
+• Growth of drug markets
+• Shifts in human‑trafficking routes
+• Rise of digital fraud
+• Expansion of offshore secrecy
+• Terrorist‑financing patterns (with harm‑focused framing)
+
+WHERE TO SOURCE ILLEGAL‑MONEY DATA (Legitimate, Public, Non‑Operational Sources)
+
+These are safe, legal, open‑source intelligence (OSINT) sources used by analysts:
+1. FATF (Financial Action Task Force)
+• Mutual evaluation reports
+• Typology reports
+• High‑risk jurisdiction lists
+2. UNODC (United Nations Office on Drugs & Crime)
+• Drug trafficking routes
+• Human trafficking reports
+• Illicit‑flow estimates
+3. World Bank & IMF
+• IFF estimates
+• AML/CTF effectiveness
+• Trade‑based money laundering indicators
+4. Global Financial Integrity (GFI)
+• Trade misinvoicing
+• Illicit financial flow estimates by country
+5. Europol / Interpol
+• Organized crime threat assessments
+• Cross‑border criminal‑network analysis
+6. Academic & NGO datasets
+• Havocscope (black‑market data)
+• Transparency International
+• Basel AML Index
+7. Public court filings & sanctions lists
+• OFAC
+• EU sanctions
+• UK NCA
+• DOJ indictments
+These sources provide macro‑level intelligence, not operational details.
+---
+🛠️ TECH STACK FOR THIS VERSION
+Frontend
+• CesiumJS or Mapbox GL (globe mode)
+• React or Svelte for UI
+• D3.js for animated flows
+Backend
+• Python (FastAPI) or Node.js
+• Scheduled ingestion of OSINT datasets
+• Aggregation + normalization engine
+Data Format
+• GeoJSON for routes
+• Time‑series JSON for flows
+• Country‑level risk indices
+---
+MVP SCOPE (Lean but powerful)
+1. 3D globe with illicit‑flow heatmap
+2. Country intelligence cards
+3. 5 typology layers
+4. Flow animations
+5. Time slider
+6. Data‑source transparency panel

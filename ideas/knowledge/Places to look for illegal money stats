@@ -1,0 +1,57 @@
+Places to look for illegal money stats?
+
+
+Why illegal‑money stats are always estimates
+Because illegal activity is intentionally hidden, no method is exact. Even the best anti‑money‑laundering systems recover only about 0.1% of laundered funds globally. 
+Therefore, analysts triangulate multiple imperfect data sources to produce a range rather than a precise number.
+
+
+
+
+Illegal‑money statistics (often called illicit financial flows or money‑laundering estimates) are calculated using indirect measurement models, crime‑based data, financial‑system reporting, and economic discrepancy methods. No country can directly “count” illegal money, so analysts combine multiple imperfect data sources to estimate the scale.
+---
+🔍 How illegal‑money statistics are actually calculated
+1. Crime‑based measurement (bottom‑up)
+Analysts start with known criminal activities—drug trafficking, fraud, corruption, cybercrime—and estimate the revenue each crime type generates.
+• The U.S. Treasury’s National Money Laundering Risk Assessment identifies major predicate crimes such as fraud, drug trafficking, and cybercrime as core sources of illicit funds. 
+• Global studies estimate criminals launder $800 billion–$2 trillion per year, roughly 2–5% of global GDP. 
+How it’s calculated:
+[ \text{Illicit funds} = \sum (\text{estimated revenue from each crime type})
+ ]
+These estimates come from law‑enforcement cases, victim‑loss data, and economic modeling.
+---
+2. Financial‑system reporting (top‑down)
+Governments analyze suspicious financial activity reported by banks and financial institutions.
+Examples:
+• Suspicious Activity Reports (SARs): FinCEN data shows structuring indicators appear in 1 in 5 SAR narratives, revealing patterns of laundering behavior. 
+• Money‑laundering convictions: U.S. Sentencing Commission data tracks the number of cases, median loss amounts, and offender characteristics. 
+How it’s used:
+SAR volumes, typologies, and transaction patterns help estimate how much illicit money is flowing through the financial system.
+---
+3. Economic discrepancy models
+These models compare what should be happening in an economy vs. what is happening.
+Common methods:
+• Trade misinvoicing analysis: FATF finds 1 in 2 trade‑based laundering cases involve over‑ or under‑invoicing. 
+• Balance‑of‑payments anomalies: Large unexplained capital movements may indicate illicit flows.
+How it’s calculated:
+[ \text{Illicit flow estimate} = \text{Expected economic value} - \text{Reported economic value}
+ ]
+---
+4. UN and FATF methodological frameworks
+The UNODC Working Guidelines provide standardized methods for measuring crime‑related illicit financial flows, emphasizing:
+• multi‑source data integration
+• crime‑specific modeling
+• cross‑border flow tracking
+
+FATF (Financial Action Task Force) also publishes typology studies and global risk assessments that inform national estimates.
+---
+5. Case‑based extrapolation
+Researchers analyze known money‑laundering cases and extrapolate patterns to the broader economy.
+Examples:
+• Shell companies and beneficial‑ownership concealment are found in a significant share of complex laundering cases. 
+• Virtual‑asset laundering is rising, with 10,000+ crypto‑related entities involved in laundering ecosystems. 
+---
+Why illegal‑money stats are always estimates
+Because illegal activity is intentionally hidden, no method is exact. Even the best anti‑money‑laundering systems recover only about 0.1% of laundered funds globally. 
+Therefore, analysts triangulate multiple imperfect data sources to produce a range rather than a precise number.
+
