@@ -1,11 +1,7 @@
-import RepoSyncPanel from "./components/RepoSyncPanel";
+import LogsDashboard from './components/LogsDashboard';
 
 function App() {
-  return (
-    <div>
-      <RepoSyncPanel />
-    </div>
-  );
+  return <LogsDashboard />;
 }
 
 export default App;

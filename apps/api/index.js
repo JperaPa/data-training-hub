@@ -1,15 +1,14 @@
-import express from "express";
-import cors from "cors";
-import gitRoutes from "./src/routes/gitRoutes.js";
+import express from 'express';
+import cors from 'cors';
+import logsRouter from './src/routes/logs.js';
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-app.use("/git", gitRoutes);
+// Register routes AFTER app is created
+app.use('/api/logs', logsRouter);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`API server running on port ${PORT}`);
+app.listen(3000, () => {
+  console.log('API server running on port 3000');
 });

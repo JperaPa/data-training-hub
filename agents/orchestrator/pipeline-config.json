@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "stages": [
+    "daily-session-summary",
+    "reflection",
+    "goal-progress",
+    "sop-enforcement"
+  ],
+  "logsRoot": "logs",
+  "dateFormat": "YYYY-MM-DD"
+}

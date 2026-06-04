@@ -1,0 +1,16 @@
+{
+  "name": "DailyReflection",
+  "version": "1.0.0",
+  "format": "markdown",
+  "pathPattern": "logs/reflections/YYYY-MM-DD.md",
+  "sections": [
+    "keyThemes",
+    "patterns",
+    "tone",
+    "progress",
+    "sopAlignment",
+    "lessonsLearned",
+    "recommendations",
+    "metadata"
+  ]
+}

@@ -1,0 +1,38 @@
+import fs from 'fs';
+import path from 'path';
+
+const ROOT = process.cwd();
+
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function ensureDir(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+export function saveTranscript({ text, dateOverride, append = true }) {
+  const date = dateOverride || today();
+
+  const transcriptsDir = path.join(ROOT, 'logs', 'transcripts');
+  ensureDir(transcriptsDir);
+
+  const transcriptPath = path.join(transcriptsDir, `${date}.txt`);
+
+  if (append && fs.existsSync(transcriptPath)) {
+    fs.appendFileSync(transcriptPath, `\n${text}`);
+  } else {
+    fs.writeFileSync(transcriptPath, text);
+  }
+
+  return transcriptPath;
+}
+
+// CLI usage
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const sample = "Sample transcript text. Replace with real conversation.";
+  const out = saveTranscript({ text: sample });
+  console.log("Transcript saved to:", out);
+}

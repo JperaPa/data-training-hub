@@ -1,0 +1,10 @@
+{
+  "name": "Transcript",
+  "version": "1.0.0",
+  "format": "text",
+  "pathPattern": "logs/transcripts/YYYY-MM-DD.txt",
+  "fields": {
+    "date": "ISO date string",
+    "content": "raw conversation text"
+  }
+}

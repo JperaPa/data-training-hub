@@ -1,19 +1,26 @@
-import { getAgentContext } from "./agentContext.js";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 
-export function buildAgentPrompt(userMessage) {
-  const knowledge = getAgentContext();
+export class BaseAgent {
+  constructor(agentName, schema) {
+    this.agentName = agentName;
+    this.schema = schema;
 
-  const contextBlock = knowledge
-    .map(chunk => `Source: ${chunk.source}\n${chunk.text}`)
-    .join("\n\n");
+    const ajv = new Ajv({ allErrors: true });
+    addFormats(ajv);
+    this.validator = ajv.compile(schema);
+  }
 
-  return `
-You are a domain-aware agent.
-
-Use the following knowledge base when relevant:
-${contextBlock}
-
-User message:
-${userMessage}
-  `;
+  validate(output) {
+    const valid = this.validator(output);
+    if (!valid) {
+      throw new Error(
+        `Schema validation failed for ${this.agentName}: ${JSON.stringify(
+          this.validator.errors,
+          null,
+          2
+        )}`
+      );
+    }
+  }
 }

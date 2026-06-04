@@ -1,0 +1,16 @@
+{
+  "name": "data-training-hub",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dth": "node scripts/dth-cli.js",
+    "test:mcpp": "node agents/mcpp-enforcement/test-schema.js"
+  },
+  "dependencies": {
+    "inquirer": "^9.0.0",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}
+

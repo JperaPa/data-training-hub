@@ -1,0 +1,13 @@
+{
+  "name": "data-training-hub",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dth": "node scripts/dth-cli.js"
+  },
+  "dependencies": {
+    "inquirer": "^9.0.0"
+  }
+}
+
