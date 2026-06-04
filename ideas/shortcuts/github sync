@@ -1,3 +1,11 @@
+npm run tauri:dev
+
+
+npm run shortcuts
+
+cd ~/Developer/data-training-hub
+
+
 git add .
 git commit -m "update"
 git push origin main

@@ -3,12 +3,14 @@
   "identifier": "com.franciscoperalta.dth",
   "productName": "Data Training Hub",
   "version": "1.0.0",
+
   "build": {
     "beforeDevCommand": "npm run dev --prefix ../../ui",
     "beforeBuildCommand": "npm run build --prefix ../../ui",
     "devUrl": "http://localhost:5173",
     "frontendDist": "../../ui/dist"
   },
+
   "app": {
     "windows": [
       {
@@ -21,6 +23,12 @@
     ],
     "security": {
       "csp": "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:"
+    }
+  },
+
+  "permissions": {
+    "shell": {
+      "all": true
     }
   }
 }

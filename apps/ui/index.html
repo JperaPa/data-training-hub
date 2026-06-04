@@ -1,13 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ui</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Data Training Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <h2>DTH</h2>
+      <button class="nav-btn" data-action="shortcuts">⚡ Git Shortcuts</button>
+      <button class="nav-btn" data-action="agents">🧠 Agents</button>
+      <button class="nav-btn" data-action="logs">📄 Logs</button>
+      <button class="nav-btn" data-action="settings">⚙️ Settings</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main">
+      <h1>Welcome to Data Training Hub</h1>
+      <p>Select an option from the sidebar to begin.</p>
+      <div id="content"></div>
+    </main>
+
+  </div>
+
+  <script src="main.js"></script>
+</body>
 </html>
