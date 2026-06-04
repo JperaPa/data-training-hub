@@ -1,3 +1,6 @@
+console.log("Transcript Collector ran successfully.");
+console.log("Transcript path:", transcriptPath);
+
 import fs from 'fs';
 import path from 'path';
 

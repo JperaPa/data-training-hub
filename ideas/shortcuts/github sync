@@ -1,0 +1,11 @@
+git add .
+git commit -m "update"
+git push origin main
+git pull origin main
+git status
+
+git fetch --all
+git reset --hard origin/main
+
+
+git log --oneline --graph --decorate --all

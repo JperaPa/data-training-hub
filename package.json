@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dth": "node scripts/dth-cli.js",
+    "shortcuts": "node scripts/shortcuts.js",
     "test:mcpp": "node agents/mcpp-enforcement/test-schema.js"
   },
   "dependencies": {
@@ -13,4 +14,3 @@
     "ajv-formats": "^2.1.1"
   }
 }
-

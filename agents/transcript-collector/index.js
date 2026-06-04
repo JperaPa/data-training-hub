@@ -15,6 +15,10 @@ export default class TranscriptCollector {
 
     logger.success(`Transcript collected at: ${transcriptPath}`);
 
+    // Visible output for YOU
+    console.log("Transcript Collector ran successfully.");
+    console.log("Transcript path:", transcriptPath);
+
     return { transcriptPath };
   }
 }

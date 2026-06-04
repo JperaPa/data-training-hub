@@ -89,9 +89,14 @@ export default class Orchestrator {
   }
 }
 
-// Run standalone
+// Allow running orchestrator directly from CLI
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const context = await loadAgentContext("orchestrator");
-  const orchestrator = new Orchestrator();
-  orchestrator.run(context);
+  (async () => {
+    const progressOnly = process.argv.includes("--progress-only");
+
+    const context = await loadAgentContext("orchestrator");
+    const orchestrator = new Orchestrator();
+
+    await orchestrator.run(context);
+  })();
 }
