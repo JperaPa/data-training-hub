@@ -1,0 +1,5 @@
+[
+  {"command": "git status", "timestamp": "2026-06-05T14:00:00Z"},
+  {"command": "git add .", "timestamp": "2026-06-05T14:01:00Z"},
+  {"command": "git reset --hard origin/main", "timestamp": "2026-06-05T14:02:00Z"}
+]

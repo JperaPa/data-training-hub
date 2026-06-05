@@ -4,6 +4,21 @@
   "transcript_length": 170,
   "workflow_score": 10,
   "sop_compliance": true,
+  "command_frequency": [
+    {
+      "cmd": "git status",
+      "count": 1
+    },
+    {
+      "cmd": "git add .",
+      "count": 1
+    },
+    {
+      "cmd": "git reset --hard origin/main",
+      "count": 1
+    }
+  ],
+  "conversation_commands": [],
   "recommendations": [
     "Add more detail to reflections",
     "Improve summary structure",

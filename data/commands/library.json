@@ -1,0 +1,16 @@
+{
+  "git": [
+    "git add .",
+    "git commit -m \"update\"",
+    "git push origin main",
+    "git fetch --all",
+    "git reset --hard origin/main",
+    "git status"
+  ],
+  "project": [
+    "cd ~/Developer/data-training-hub",
+    "cd ~/Developer/data-training-hub/apps/desktop/dth-desktop",
+    "npm run tauri:dev",
+    "npm run shortcuts"
+  ]
+}
