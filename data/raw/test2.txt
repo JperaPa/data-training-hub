@@ -1,0 +1,1 @@
+I fixed the Tauri config and built the Summarizer.

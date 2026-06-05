@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-05",
+  "verdict": "Strong day",
+  "transcript_length": 170,
+  "workflow_score": 10,
+  "sop_compliance": true,
+  "recommendations": [
+    "Add more detail to reflections",
+    "Improve summary structure",
+    "Document blockers earlier",
+    "Increase workflow consistency"
+  ]
+}

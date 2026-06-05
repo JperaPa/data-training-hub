@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-05",
+  "workflow_score": 10,
+  "sop_compliance": true,
+  "summary_quality": "placeholder",
+  "reflection_depth": "placeholder",
+  "progress_signal": "placeholder",
+  "recommendations": [
+    "Add more detail to reflections",
+    "Document blockers earlier in the day",
+    "Increase structure in daily summaries"
+  ]
+}

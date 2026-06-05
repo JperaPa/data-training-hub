@@ -1,0 +1,10 @@
+# Transcript for 2026-06-05
+
+
+--- FILE: test1.txt ---
+Today I worked on the agent pipeline.
+
+
+--- FILE: test2.txt ---
+I fixed the Tauri config and built the Summarizer.
+

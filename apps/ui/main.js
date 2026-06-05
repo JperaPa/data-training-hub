@@ -1,3 +1,4 @@
+// NAVIGATION HANDLER
 document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const action = btn.dataset.action;
@@ -5,6 +6,7 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
   });
 });
 
+// PANEL LOADER
 function loadPanel(action) {
   const content = document.getElementById("content");
 
@@ -24,8 +26,16 @@ function loadPanel(action) {
 
     case "agents":
       content.innerHTML = `
-        <h2>🧠 Agents</h2>
-        <p>Agent controls will go here.</p>
+        <h2>🧠 Agent Controls</h2>
+
+        <button onclick="runAgent('transcript')">Run Transcript Collector</button>
+        <button onclick="runAgent('summary')">Run Daily Summarizer</button>
+        <button onclick="runAgent('reflection')">Run Reflection Agent</button>
+        <button onclick="runAgent('sop')">Run SOP Enforcement Agent</button>
+        <button onclick="runAgent('progress')">Run Progress Evaluator</button>
+        <button onclick="runAgent('pipeline')">Run FULL Pipeline</button>
+
+        <pre id="agent-output"></pre>
       `;
       break;
 
@@ -45,6 +55,7 @@ function loadPanel(action) {
   }
 }
 
+// GIT SHORTCUTS
 async function runShortcut(type) {
   const output = document.getElementById("output");
 
@@ -58,7 +69,28 @@ async function runShortcut(type) {
 
   const cmd = commands[type];
 
-  // Tauri shell command
+  const result = await window.__TAURI__.shell.Command
+    .create("sh", ["-c", cmd])
+    .execute();
+
+  output.textContent = result.stdout || result.stderr;
+}
+
+// AGENT RUNNER
+async function runAgent(type) {
+  const output = document.getElementById("agent-output");
+
+  const commands = {
+    transcript: "node agents/transcript-collector/run.js",
+    summary: "node agents/daily-summarizer/run.js",
+    reflection: "node agents/reflection-agent/run.js",
+    sop: "node agents/mcpp-enforcement/run.js",
+    progress: "node agents/progress-evaluator/run.js",
+    pipeline: "node agents/pipeline/run.js"
+  };
+
+  const cmd = commands[type];
+
   const result = await window.__TAURI__.shell.Command
     .create("sh", ["-c", cmd])
     .execute();
