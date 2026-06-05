@@ -1,21 +1,18 @@
 import fs from "fs";
 import path from "path";
 import TranscriptCollector from "../transcript-collector/index.js";
-import DailySessionSummarizer from "../daily-session-summarizer/index.js";
-import ReflectionAgent from "../reflection/index.js";
-import SOPEnforcementAgent from "../sop-enforcement/index.js";
-import MCPPEnforcementAgent from "../mcpp-enforcement/index.js";
+import { run as runDailySessionSummarizer } from "../daily-session-summarizer/index.js";
+import { run as runReflectionAgent } from "../reflection/index.js";
+import { run as runSOPEnforcement } from "../sop-enforcement/index.js";
+import { run as runMCPPEnforcement } from "../mcpp-enforcement/index.js";
 import { loadAgentContext } from "../../libs/ai/agentContext.js";
 import { runWorkflowCritic } from "../workflow-critic/index.js";
 import { execSync } from "child_process";
 
 export default class Orchestrator {
   constructor() {
+    // Only TranscriptCollector is a class-based agent
     this.transcriptCollector = new TranscriptCollector();
-    this.summarizer = new DailySessionSummarizer();
-    this.reflection = new ReflectionAgent();
-    this.sopEnforcer = new SOPEnforcementAgent();
-    this.mcppEnforcer = new MCPPEnforcementAgent();
   }
 
   async run(context) {
@@ -32,25 +29,25 @@ export default class Orchestrator {
     // -----------------------------
     // 2. Daily Session Summarizer
     // -----------------------------
-    const summaryResult = await this.summarizer.run(context);
+    const summaryResult = await runDailySessionSummarizer(context);
     const sessionSummaryPath = summaryResult?.sessionSummaryPath || null;
 
     // -----------------------------
     // 3. Reflection Agent
     // -----------------------------
-    const reflectionResult = await this.reflection.run(context);
+    const reflectionResult = await runReflectionAgent(context);
     const reflectionPath = reflectionResult?.reflectionPath || null;
 
     // -----------------------------
     // 4. SOP Enforcement Agent
     // -----------------------------
-    const sopResult = await this.sopEnforcer.run(context);
+    const sopResult = await runSOPEnforcement(context);
     const sopCheckPath = sopResult?.sopCheckPath || null;
 
     // -----------------------------
     // 5. MCPP Enforcement Agent
     // -----------------------------
-    const mcppResult = await this.mcppEnforcer.run(context);
+    const mcppResult = await runMCPPEnforcement(context);
     const mcppCheckPath = mcppResult?.mcppCheckPath || null;
 
     // -----------------------------
@@ -67,7 +64,7 @@ export default class Orchestrator {
     // -----------------------------
     // 7. Workflow Critic Agent (NEW)
     // -----------------------------
-    await runWorkflowCritic();
+    await runWorkflowCritic(context);
 
     // -----------------------------
     // 8. Coach Agent (FINAL)
