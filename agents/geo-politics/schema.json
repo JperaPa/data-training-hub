@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "classification": { "type": "string" },
+    "risk": { "type": "number" },
+    "summary": { "type": "string" },
+    "why_it_matters": { "type": "string" },
+    "entities": { "type": "array", "items": { "type": "string" } },
+    "topics": { "type": "array", "items": { "type": "string" } },
+    "source": { "type": "string" },
+    "scrapedAt": { "type": "string" }
+  },
+  "required": [
+    "classification",
+    "risk",
+    "summary",
+    "why_it_matters",
+    "source"
+  ]
+}
