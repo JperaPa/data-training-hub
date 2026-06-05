@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "workflow_critique": { "type": "string" },
+    "summary_critique": { "type": "string" },
+    "reflection_critique": { "type": "string" },
+    "patterns": { "type": "string" },
+    "contradictions": { "type": "string" },
+    "recommendations": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": [
+    "workflow_critique",
+    "summary_critique",
+    "reflection_critique",
+    "patterns",
+    "contradictions",
+    "recommendations"
+  ]
+}

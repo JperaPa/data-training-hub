@@ -6,6 +6,10 @@ npm run shortcuts
 cd ~/Developer/data-training-hub
 cd ~/Developer/data-training-hub/apps/desktop/dth-desktop
 
+node agents/coach/index.js
+node agents/orchestrator/index.js
+npm run dth
+
 git add .
 git commit -m "update"
 git push origin main

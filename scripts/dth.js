@@ -1,5 +1,21 @@
 #!/usr/bin/env node
+
+// --- FIX: Force raw TTY mode for arrow keys ---
+import readline from "readline";
+if (process.stdin.isTTY) {
+  readline.emitKeypressEvents(process.stdin);
+  try {
+    process.stdin.setRawMode(true);
+  } catch (err) {
+    // Some terminals throw here; safe to ignore
+  }
+}
+// ----------------------------------------------
+
+console.log("TTY:", process.stdin.isTTY);
+
 import inquirer from "inquirer";
+const { prompt } = inquirer;
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
@@ -11,6 +27,7 @@ const ROOT = process.cwd();
 // ---------------------------------------------
 const commands = {
   coach: "node agents/coach/index.js",
+  workflowcritic: "node agents/workflow-critic/index.js",
   summarize: "node agents/daily-session-summarizer/index.js",
   reflect: "node agents/reflection/index.js",
   sop: "node agents/sop-enforcement/index.js",
@@ -63,13 +80,14 @@ function run(cmd) {
 // INTERACTIVE MENU
 // ---------------------------------------------
 async function menu() {
-  const answer = await inquirer.prompt([
+  const answer = await prompt([
     {
       type: "list",
       name: "choice",
       message: "DTH Operator Console",
       choices: [
         { name: "Run Coach Agent", value: "coach" },
+        { name: "Run Workflow Critic", value: "workflowcritic" },
         { name: "Run Full Pipeline", value: "pipeline" },
         { name: "View Today's Coaching Report", value: "openLog" },
         new inquirer.Separator(),
@@ -89,48 +107,50 @@ async function menu() {
   }
 
   if (answer.choice === "commandsToday") {
-    const cmds = loadTodayCommands();
-    console.log(cmds);
+    console.log(loadTodayCommands());
     return;
   }
 
   if (answer.choice === "commandsTop") {
-    const cmds = countFrequency(loadTodayCommands());
-    console.log(cmds);
+    console.log(countFrequency(loadTodayCommands()));
     return;
   }
 
   run(commands[answer.choice]);
 }
 
+
+
 // ---------------------------------------------
 // ENTRYPOINT
 // ---------------------------------------------
-const arg = process.argv[2];
+(async () => {
+  const arg = process.argv[2];
 
-if (!arg) {
-  menu();
-  process.exit(0);
-}
+  if (!arg) {
+    await menu();
+    return;
+  }
 
-if (commands[arg]) {
-  run(commands[arg]);
-  process.exit(0);
-}
+  if (commands[arg]) {
+    run(commands[arg]);
+    return;
+  }
 
-if (arg === "logs" && process.argv[3] === "today") {
-  openTodayLog();
-  process.exit(0);
-}
+  if (arg === "logs" && process.argv[3] === "today") {
+    openTodayLog();
+    return;
+  }
 
-if (arg === "commands" && process.argv[3] === "today") {
-  console.log(loadTodayCommands());
-  process.exit(0);
-}
+  if (arg === "commands" && process.argv[3] === "today") {
+    console.log(loadTodayCommands());
+    return;
+  }
 
-if (arg === "commands" && process.argv[3] === "top") {
-  console.log(countFrequency(loadTodayCommands()));
-  process.exit(0);
-}
+  if (arg === "commands" && process.argv[3] === "top") {
+    console.log(countFrequency(loadTodayCommands()));
+    return;
+  }
 
-console.log("Unknown command. Run `dth` for menu.");
+  console.log("Unknown command. Run `dth` for menu.");
+})();

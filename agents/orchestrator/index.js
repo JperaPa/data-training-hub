@@ -6,6 +6,8 @@ import ReflectionAgent from "../reflection/index.js";
 import SOPEnforcementAgent from "../sop-enforcement/index.js";
 import MCPPEnforcementAgent from "../mcpp-enforcement/index.js";
 import { loadAgentContext } from "../../libs/ai/agentContext.js";
+import { runWorkflowCritic } from "../workflow-critic/index.js";
+import { execSync } from "child_process";
 
 export default class Orchestrator {
   constructor() {
@@ -46,13 +48,13 @@ export default class Orchestrator {
     const sopCheckPath = sopResult?.sopCheckPath || null;
 
     // -----------------------------
-    // 5. MCPP Enforcement Agent (NEW)
+    // 5. MCPP Enforcement Agent
     // -----------------------------
     const mcppResult = await this.mcppEnforcer.run(context);
     const mcppCheckPath = mcppResult?.mcppCheckPath || null;
 
     // -----------------------------
-    // 6. Progress Evaluator (inside orchestrator)
+    // 6. Progress Evaluator (internal)
     // -----------------------------
     const progressPath = this.writeProgressFile(date, {
       transcriptPath,
@@ -61,6 +63,16 @@ export default class Orchestrator {
       sopCheckPath,
       mcppCheckPath
     });
+
+    // -----------------------------
+    // 7. Workflow Critic Agent (NEW)
+    // -----------------------------
+    await runWorkflowCritic();
+
+    // -----------------------------
+    // 8. Coach Agent (FINAL)
+    // -----------------------------
+    execSync(`node agents/coach/index.js`, { stdio: "inherit" });
 
     logger.success("Daily pipeline completed.");
 
@@ -92,11 +104,8 @@ export default class Orchestrator {
 // Allow running orchestrator directly from CLI
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
-    const progressOnly = process.argv.includes("--progress-only");
-
     const context = await loadAgentContext("orchestrator");
     const orchestrator = new Orchestrator();
-
     await orchestrator.run(context);
   })();
 }

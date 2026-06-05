@@ -14,15 +14,23 @@ export const openai = createAPIClient(
   }
 );
 
+// Unified OpenAI wrapper for all agents
 export async function runOpenAI(prompt) {
-  const result = await openai.post("/responses", {
+  const response = await openai.post("/responses", {
     model: "gpt-5.4-mini",
     input: prompt
   });
 
-  if (!result.output_text) {
+  // Extract output_text from the new Responses API format
+  const text =
+    response?.output?.[0]?.content?.[0]?.text ||
+    response?.output_text ||
+    null;
+
+  if (!text) {
+    console.error("❌ Full OpenAI response:", JSON.stringify(response, null, 2));
     throw new Error("OpenAI returned no output_text");
   }
 
-  return result.output_text.trim();
+  return text.trim();
 }
