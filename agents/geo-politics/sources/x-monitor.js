@@ -37,3 +37,11 @@ export async function fetchXPosts(username) {
     return [];
   }
 }
+
+// Standalone test
+if (import.meta.url === `file://${process.argv[1]}`) {
+  (async () => {
+    const posts = await fetchXPosts("USTreasury");
+    console.log(posts);
+  })();
+}
